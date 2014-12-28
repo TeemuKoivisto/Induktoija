@@ -1,13 +1,12 @@
 package induktoija4000.main;
 
-/**
- * Hello world!
- *
- */
+import induktoija4000.kayttoliittyma.Kayttis;
+
 public class App 
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        Kayttis ohjelma = new Kayttis();
+        ohjelma.kaynnista();
     }
 }
