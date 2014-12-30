@@ -36,12 +36,29 @@ public class Kayttis {
             laskin.tulostaLauseke();
             */
             Yhtalo yhtalo = new Yhtalo(syote);
-            System.out.println(yhtalo.getClass());
-            yhtalo.lisaaKaikki();
+            System.out.println("lisataan");
+            yhtalo.lueKaikki();
             yhtalo.tulostaKaikki();
+            yhtalo.tulostaTyypit();
+            System.out.println("supistetaan");
             yhtalo.supistaKaikki();
             yhtalo.tulostaKaikki();
-            
+            yhtalo.tulostaTyypit();
+            System.out.println("lasketaan kaikki yhteen");
+            yhtalo.laskeYhteenKaikki();
+            yhtalo.tulostaKaikki();
+            yhtalo.tulostaTyypit();
+            System.out.println("jarjestetaan kaikki");
+            yhtalo.jarjestaYhtalo();
+            yhtalo.tulostaKaikki();
+            yhtalo.tulostaTyypit();
+            System.out.println("lasketaan vielä kerran yhteen");
+            yhtalo.laskeYhteenKaikki();
+            yhtalo.tulostaKaikki();
+            yhtalo.tulostaTyypit();
+            System.out.println("ratkaistaan yhtalo");
+            yhtalo.ratkaiseYhtalo();
+            yhtalo.tulostaKaikki();
 //            Parser parser = new Parser();
 //            System.out.println("" + parser.eval(syote));
             

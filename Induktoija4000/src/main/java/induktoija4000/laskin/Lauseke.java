@@ -20,18 +20,8 @@ public class Lauseke implements Komponentti{
     public Lauseke() {
         sisalto = new ArrayList<Komponentti>();
         supistettu = false;
-    }
-      
-    public boolean lisaa(char c) {
-        if (c==')') {
-            return false;
-        }
-        
-//        Termi termi = sisalto.get(sisalto.size()-1);
-//        termi.lisaa(c);
-        return false;
-    }
-    
+    }      
+  
     public void lisaa(Komponentti k) {
         sisalto.add(k);
     }
@@ -61,5 +51,9 @@ public class Lauseke implements Komponentti{
     
     public List<Komponentti> getLauseke() {
         return sisalto;
+    }
+    
+    public String palautaTyyppi() {
+        return "l";
     }
 }

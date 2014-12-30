@@ -14,12 +14,14 @@ import java.util.List;
  */
 public class Yhtalo {
     
-    private List<Komponentti> sisalto;
+    private List<Komponentti> vasenpuoli;
+    private List<Komponentti> oikeapuoli;
     private int paikka;
     private String s;
     
     public Yhtalo(String s) {
-        sisalto = new ArrayList<Komponentti>();
+        vasenpuoli = new ArrayList<Komponentti>();
+        oikeapuoli = new ArrayList<Komponentti>();
         paikka = -1;
         this.s=s;
     }
@@ -32,7 +34,8 @@ public class Yhtalo {
         return 'Q';
     }
     
-    public void lisaaKaikki() {
+    public void lueKaikki() {
+        List<Komponentti> lisattavalista = vasenpuoli;
         boolean nega = false;
         while (paikka<s.length()) {
             char c = lueMerkki();
@@ -42,18 +45,19 @@ public class Yhtalo {
                     ot.lisaaMinus();
                     nega = false;
                 }
-                sisalto.add(ot);
+                lisattavalista.add(ot);
             } else if (c == '-') {
                 nega = true;
             } else if (c == '*' || c == '(' || c=='/') {
-                Termi termi = new Termi(sisalto.get(sisalto.size()-1), c);
+                Termi termi = new Termi(lisattavalista.get(lisattavalista.size()-1), c);
                 Komponentti k = lueTermiLoppuun(c);
                 termi.lisaaTokatekija(k);
-                sisalto.remove(sisalto.size()-1);
-                sisalto.add(termi);
-            } else if (c == '=' || c == '+') {
-                // periaatteessa vain uusi lauseke, joka negatiivinen 
-                // sekä muista ')'
+                lisattavalista.remove(lisattavalista.size()-1);
+                lisattavalista.add(termi);
+            } else if (c == '=') {
+                lisattavalista = oikeapuoli;
+            } else if (c == '+') {    
+                
             } else {
                 System.out.println("paskaa syötit. hyi hyi.");
             }
@@ -97,8 +101,7 @@ public class Yhtalo {
     public Osatekija lueOsatekijaLoppuun() {
         String arvo = "";
         String var = "";
-        arvo += s.charAt(paikka);
-        char c = lueMerkki();
+        char c = s.charAt(paikka);
         while ((c >= '0' && c <= '9') || c == '.') {
             arvo += c;
             c = lueMerkki();
@@ -111,7 +114,7 @@ public class Yhtalo {
             paikka--;
         }
         if (arvo.isEmpty()) {
-            return new Osatekija(0, 1);
+            return new Osatekija(1, 1);
         } else if (var.isEmpty()) {
             return new Osatekija(Double.parseDouble(arvo), 0);
         } else {
@@ -120,30 +123,117 @@ public class Yhtalo {
     }
    
     public boolean supistaKaikki() {
+        return supista(vasenpuoli) && supista(oikeapuoli);
+    }
+    
+    public boolean supista(List<Komponentti> lista) {
         boolean supistuiko = true;
-        for (Komponentti k : sisalto) {
+        for (int i = 0; i < lista.size(); i++) {
+            Komponentti k = lista.get(i);
             if (k.supista()==false) {
                 supistuiko = false;
+            } else {
+                if (k.getClass().equals(new Termi().getClass())) {
+                    Termi t = (Termi) k;
+                    lista.add(i, t.getTulos());
+                    lista.remove(i+1);
+                }
             }
         }
         return supistuiko;
     }
+      
+    public void laskeYhteenKaikki() {
+        laskeYhteen(vasenpuoli);
+        laskeYhteen(oikeapuoli);
+    }
     
-    public void laskeYhteen() {
-        for (Komponentti k : sisalto) {
-            k.summaa(null);
+    public void laskeYhteen(List<Komponentti> lista) {
+        for (int i = 0; i < lista.size(); i++) {
+            Komponentti k = lista.get(i);
+            for (int j = 0; j < lista.size(); j++) {
+                if (i!=j && k.getClass().equals(new Osatekija(0,0).getClass())) {
+                    try {
+                        Osatekija eka = (Osatekija) k;
+                        Osatekija toka = (Osatekija) lista.get(j);
+                        if (eka.summaa(toka)) {
+                            lista.add(i, eka);
+                            lista.remove(i+1);
+                            lista.remove(j);
+                            j--;
+                        }
+                    }
+                    catch (Exception e) {
+                        System.out.println("vitttttttuuuuu");
+                    }
+                }
+            }
+        }
+    }
+    
+    public void jarjestaYhtalo() {
+        List<Komponentti> jarjestettyoikea = jarjestaYhtalonPuoli(vasenpuoli, true);
+        List<Komponentti> jarjestettyvasen = jarjestaYhtalonPuoli(oikeapuoli, false);
+        vasenpuoli.addAll(jarjestettyvasen);
+        oikeapuoli.addAll(jarjestettyoikea);
+    }
+    
+    public List<Komponentti> jarjestaYhtalonPuoli(List<Komponentti> lista, boolean onkoVasenPuoli) {
+        List<Komponentti> palautettava = new ArrayList<Komponentti>();
+        for (int i = 0; i < lista.size(); i++) {
+            Komponentti k = lista.get(i);
+            if (k.getClass().equals(new Osatekija(0,0).getClass())) {
+                Osatekija ot = (Osatekija) k;
+                if ((ot.getVariable()==0 && onkoVasenPuoli) || (ot.getVariable()>0 && onkoVasenPuoli==false)) {
+                    ot.lisaaMinus();
+                    palautettava.add(ot);
+                    lista.remove(i);
+                    i--;
+                }
+            }
+        }
+        return palautettava;
+    }
+    
+    public void ratkaiseYhtalo() {
+        if (vasenpuoli.size()==1 && oikeapuoli.size()==1) {
+            try {
+                Osatekija eka = (Osatekija) oikeapuoli.get(0);
+                Osatekija toka = (Osatekija) vasenpuoli.get(0);
+                eka.jaa(toka.getValue());
+                toka.alusta(1, 1);
+            }
+            catch (Exception e) {
+                System.out.println("ratkaisu meni nenilleen");
+            }
         }
     }
     
     public List<Komponentti> getYhtalo() {
-        return sisalto;
+        return vasenpuoli;
+    }
+    
+    public void tulostaTyypit() {
+        for (Komponentti k : vasenpuoli) {
+            System.out.print(k.palautaTyyppi()+" ");
+        }
+        System.out.print("= ");
+        for (Komponentti k : oikeapuoli) {
+            System.out.print(k.palautaTyyppi() +" ");
+        }
+        
+        System.out.println("");
     }
     
     public void tulostaKaikki() {
-        System.out.println("perkele");
-        for (Komponentti k : sisalto) {
+        for (Komponentti k : vasenpuoli) {
             System.out.print(k+" ");
         }
+        System.out.print("= ");
+        for (Komponentti k : oikeapuoli) {
+            System.out.print(k+" ");
+        }
+        
         System.out.println("");
     }
 }

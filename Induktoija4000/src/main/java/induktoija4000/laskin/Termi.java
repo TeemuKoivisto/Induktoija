@@ -43,8 +43,7 @@ public class Termi implements Komponentti{
         return false;
     }
     
-    
-    public boolean toimi() {
+    public boolean kerroTaiJaaOsatekijaEnsimmaisenaTekijana() {
         Osatekija ekaOt;
         Osatekija tokaOt;
         try {
@@ -65,70 +64,53 @@ public class Termi implements Komponentti{
         }
     }
     
-    public boolean supista() {
-        if (ekaTekija.supista()) {
-            if (tokaTekija.supista()) {
-                return toimi();
-            }
+    public boolean kerroTaiJaaTermiEnsimmaisenaTekijana() {
+        Termi ekaTermi;
+        Osatekija tokaOt;
+        try {
+            //tässä virhe
+            ekaTermi = (Termi) ekaTekija;
+            tokaOt = (Osatekija) tokaTekija;
+        } catch (Exception e) {
+            return false;
+        }
+        if (tyyppi == '*' || tyyppi == '(') {
+            
+            tulos = ekaTermi.getTulos().kerro(tokaOt);
+            supistettu = true;
+            return true;
+        } else {
+            tulos = ekaTermi.getTulos().jaa(tokaOt);
+            supistettu = true;
+            return true;
+        }
+    }
+    
+    public boolean kerroTaiJaa() {
+        if (ekaTekija.getClass().equals(new Osatekija(0,0).getClass())) {
+            return this.kerroTaiJaaOsatekijaEnsimmaisenaTekijana();
+        }
+        if (ekaTekija.getClass().equals(this.getClass())) {
+            return this.kerroTaiJaaTermiEnsimmaisenaTekijana();
         }
         return false;
     }
     
-    /*
     public boolean supista() {
-        if (ekaTekija.getClass().equals(new Osatekija().getClass())) {
-            Osatekija ekaOt = (Osatekija) ekaTekija;
-            if (tokaTekija.getClass().equals(new Osatekija().getClass())) {
-                Osatekija tokaOt = (Osatekija) tokaTekija;
-                if (tyyppi == '*' || tyyppi == '(') {
-                    tulos = ekaOt.kerro(tokaOt);
-                    return true;
-                } else {
-                    tulos = ekaOt.jaa(tokaOt);
-                    return true;
-                }
-            } else {
-                if (tokaTekija.getClass().equals(this.getClass())) {
-                    Termi tokaTermi = (Termi) tokaTekija;
-                    if (tokaTermi.supista()) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    Lauseke tokaLause = (Lauseke) tokaTekija;
-                    if (tokaLause.supista()) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-        } else {
-            if (ekaTekija.getClass().equals(this.getClass())) {
-                Termi ekaTermi = (Termi) ekaTekija;
-                if (ekaTermi.supista()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                Lauseke tokaLause = (Lauseke) tokaTekija;
-                if (tokaLause.supista()) {
-                    return true;
-                } else {
-                    return false;
-                }
+        if (ekaTekija.supista()) {
+            if (tokaTekija.supista()) {
+                return kerroTaiJaa();
             }
         }
-    }*/
-    
+        return false;
+    }
+        
     public Osatekija getTulos() {
         if (supistettu) {
             return tulos;
         } else {
             System.out.println("hei mitä vittua");
-            return new Osatekija();
+            return new Osatekija(0, 0);
         }
     }
     
@@ -138,6 +120,10 @@ public class Termi implements Komponentti{
     
     public boolean lisaa(char c) {
         return true;
+    }
+    
+    public String palautaTyyppi() {
+        return "t";
     }
     
     public String toString() {

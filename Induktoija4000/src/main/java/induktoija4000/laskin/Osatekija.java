@@ -18,16 +18,14 @@ public class Osatekija implements Komponentti{
     private double muuttuja;
     private char variable;
     private boolean supistettu;
-    private String sisalto;
     
-    public Osatekija() {
-        sisalto = "";
-        arvo=0;
-        muuttuja=0;
+    public Osatekija(double a, double d, char var) {
+        arvo = a;
+        muuttuja = d;
+        variable = var;
     }
     
     public Osatekija(double a, double m) {
-        sisalto = "";
         arvo = a;
         muuttuja = m;
     }
@@ -37,21 +35,22 @@ public class Osatekija implements Komponentti{
         muuttuja = m;
     }
     
-    public boolean lisaa(char c) {
-        sisalto += c;
-        return true;
-    }
-    
     public void lisaaMinus() {
-        sisalto = "-" + sisalto;
+        arvo *= -1.0;
     }
     
     public boolean supista() {
+        return true;
+        /*
         if (supistettu) {
             return true;
         }
-        muutaArvoksi();
-        return true;
+        supistettu = true;
+        return true;*/
+    }
+    
+    public String palautaTyyppi() {
+        return "ot";
     }
     
     public boolean summaa(Osatekija ot) {
@@ -62,6 +61,11 @@ public class Osatekija implements Komponentti{
             return true;
         }
         return false;
+    }
+    
+    public Osatekija jaa(double d) {
+        this.arvo /= d;
+        return this;
     }
     
     public Osatekija jaa(Osatekija ot) {
@@ -80,6 +84,8 @@ public class Osatekija implements Komponentti{
         return this;
     }
     
+    
+    /*
     public void muutaArvoksi() {
         String sarvo = "";
         String smuuttuja = "";
@@ -106,7 +112,7 @@ public class Osatekija implements Komponentti{
         }
         supistettu = true;
     }
-    
+    */
     public double getValue() {
         return arvo;
     }
@@ -116,6 +122,14 @@ public class Osatekija implements Komponentti{
     }
     
     public String toString() {
-        return sisalto;
+        if (muuttuja == 0) {
+            return "" + arvo;
+        } else if (muuttuja == 1 && arvo == 1) {
+            return "" + "n";
+        } else if (muuttuja == 1) {
+            return "" + arvo + "n";
+        } else {
+            return "" + arvo + "n^" + muuttuja;
+        }
     }
 }

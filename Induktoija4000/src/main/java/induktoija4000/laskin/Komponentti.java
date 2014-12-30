@@ -10,7 +10,8 @@ package induktoija4000.laskin;
  * @author Teemu
  */
 public interface Komponentti {
-    public boolean lisaa(char c);
     public boolean supista();
     public boolean summaa(Osatekija ot);
+    public String palautaTyyppi();
+    //public List<Osatekija> palautaArvo;
 }
