@@ -1,6 +1,5 @@
 package induktoija4000.laskin.turhat;
 
-import induktoija4000.laskin.Lauseke;
 import static induktoija4000.laskin.turhat.Symboli.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +76,6 @@ public class Laskin {
                 viimeisinTyyppi = MUUTTUJA;
                 paikka++;
             } else if (tyyppi==KERTO || tyyppi==JAKO) {
-                Lauseke expressio = new Lauseke();
             } else {
                 paikka++;
                 if (viimeisinTyyppi == NUMERO || viimeisinTyyppi == MUUTTUJA) {

@@ -1,10 +1,8 @@
 package induktoija4000.kayttoliittyma;
 
-import induktoija4000.laskin.Komponentti;
-import induktoija4000.laskin.Osatekija;
-import induktoija4000.laskin.turhat.Laskin;
+import induktoija4000.laskin.Laskin;
+import induktoija4000.laskin.komponentit.*;
 import induktoija4000.laskin.Parser;
-import induktoija4000.laskin.Yhtalo;
 import java.util.Scanner;
 
 public class Kayttis {
@@ -28,42 +26,13 @@ public class Kayttis {
             System.out.println("Anna lauseke esim. n+3=n-12");
             System.out.println("Kayta muuttujana n:aa.");
             
+//            Yhtalo yhtalo = new Yhtalo("");
+//            yhtalo.ratkaiseToisenAsteenYhtalo(2, 5, -3);
+//            
             String syote = lukija.nextLine();
-            /*
-            laskin.annaSyote(syote);
-            laskin.tulostaLauseke();
-            laskin.laskeLauseke();
-            laskin.tulostaLauseke();
-            */
-            Yhtalo yhtalo = new Yhtalo(syote);
-            System.out.println("lisataan");
-            yhtalo.lueKaikki();
-            yhtalo.tulostaKaikki();
-            yhtalo.tulostaTyypit();
-            System.out.println("supistetaan");
-            yhtalo.supistaKaikki();
-            yhtalo.tulostaKaikki();
-            yhtalo.tulostaTyypit();
-            System.out.println("lasketaan kaikki yhteen");
-            yhtalo.laskeYhteenKaikki();
-            yhtalo.tulostaKaikki();
-            yhtalo.tulostaTyypit();
-            System.out.println("jarjestetaan kaikki");
-            yhtalo.jarjestaYhtalo();
-            yhtalo.tulostaKaikki();
-            yhtalo.tulostaTyypit();
-            System.out.println("lasketaan vielä kerran yhteen");
-            yhtalo.laskeYhteenKaikki();
-            yhtalo.tulostaKaikki();
-            yhtalo.tulostaTyypit();
-            System.out.println("ratkaistaan yhtalo");
-            yhtalo.ratkaiseYhtalo();
-            yhtalo.tulostaKaikki();
-//            Parser parser = new Parser();
-//            System.out.println("" + parser.eval(syote));
             
-//            laskin.laske();
-//            tulostaTulokset();
+            laskin.annaSyote(syote);
+            laskin.laske();
             break;
         }
     }
