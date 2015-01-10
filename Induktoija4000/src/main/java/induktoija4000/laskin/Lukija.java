@@ -5,7 +5,11 @@
  */
 package induktoija4000.laskin;
 
-import induktoija4000.laskin.komponentit.*;
+import induktoija4000.komponentit.Yhtalo;
+import induktoija4000.komponentit.Osatekija;
+import induktoija4000.komponentit.Komponentti;
+import induktoija4000.komponentit.Termi;
+import induktoija4000.komponentit.Lauseke;
 import java.util.List;
 
 public class Lukija {
@@ -37,7 +41,7 @@ public class Lukija {
             if ((c >= '0' && c <= '9')|| c == 'n' || c == 'x') {
                 Osatekija ot = lueOsatekijaLoppuun();
                 if (nega) {
-                    ot.lisaaMinus();
+                    ot.muutaNegatiiviseksi();
                     nega = false;
                 }
                 lista.add(ot);
@@ -71,7 +75,7 @@ public class Lukija {
             if ((c >= '0' && c <= '9')|| c == 'n' || c == 'x') {
                 Osatekija ot = lueOsatekijaLoppuun();
                 if (nega) {
-                    ot.lisaaMinus();
+                    ot.muutaNegatiiviseksi();
                     nega = false;
                 }
                 lista.add(ot);

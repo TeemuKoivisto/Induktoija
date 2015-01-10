@@ -1,18 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package induktoija4000.laskin;
 
-import induktoija4000.laskin.komponentit.*;
+import induktoija4000.komponentit.Yhtalo;
+import induktoija4000.komponentit.Osatekija;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-/**
- *
- * @author Teemu
- */
 public class Laskin {
     
     private Yhtalo yhtalo;
@@ -29,55 +23,85 @@ public class Laskin {
     }
     
     public void laske() {
-        System.out.println("lisataan");
-        yhtalo.tulostaKaikki();
+        System.out.println("\nluetaan");
+        System.out.println(yhtalo);
         yhtalo.tulostaTyypit();
-        System.out.println("supistetaan");
-        yhtalo.supistaKaikki();
-        yhtalo.tulostaKaikki();
+        
+        System.out.println("\nsupistetaan osatekijoiksi");
+        yhtalo.supistaKaikkiOsatekijoiksi();
+        System.out.println(yhtalo);
         yhtalo.tulostaTyypit();
-        System.out.println("lasketaan kaikki yhteen");
-        yhtalo.laskeYhteenKaikki();
-        yhtalo.tulostaKaikki();
-        yhtalo.tulostaTyypit();
-        System.out.println("jarjestetaan kaikki");
-        yhtalo.jarjestaYhtalo();
-        yhtalo.tulostaKaikki();
-        yhtalo.tulostaTyypit();
-        System.out.println("lasketaan vielä kerran yhteen");
-        yhtalo.laskeYhteenKaikki();
-        yhtalo.tulostaKaikki();
-        yhtalo.tulostaTyypit();
-        System.out.println("ratkaistaan yhtalo");
-        yhtalo.ratkaiseYhtalo();
-        yhtalo.tulostaKaikki();
+        
+        System.out.println("\nlasketaan kaikki yhteen");
+        this.laskeYhteenKaikkiOsatekijoina();
+        System.out.println(yhtalo);
+        
+        System.out.println("\njarjestetaan kaikki");
+        this.jarjestaOsatekijat();
+        System.out.println(yhtalo);
+        
+        System.out.println("\nratkaistaan yhtalo");
+        ratkaiseYhtalo();
     }
     
     public void ratkaiseYhtalo() {
-        List<Komponentti> vasenpuoli=yhtalo.getVasenpuoli(), oikeapuoli=yhtalo.getOikeapuoli();
-        if (vasenpuoli.size()==1 && oikeapuoli.size()==1) {
-            try {
-                Osatekija eka = (Osatekija) oikeapuoli.get(0);
-                Osatekija toka = (Osatekija) vasenpuoli.get(0);
-                eka.jaa(toka.getValue());
-                toka.jaa(toka.getValue());
+        List<Osatekija> osatekijat = yhtalo.getOsatekijat();
+        if (osatekijat.size()==2) {
+            this.ratkaiseKahdenOsatekijanYhtalo();
+        } else if (osatekijat.size()==3) {
+            this.ratkaiseKolmenOsatekijanYhtalo();
+        } else {
+            System.out.println("vituix men ratkaiseYhtalo()");
+        }
+    }
+    
+    public void ratkaiseKahdenOsatekijanYhtalo() {
+        List<Osatekija> osatekijat = yhtalo.getOsatekijat();
+        double pieninMuuttuja = osatekijat.get(1).getVariable();
+        if (pieninMuuttuja<0) {
+            for (Osatekija ot : osatekijat) {
+                ot.kerro(new Osatekija(1, pieninMuuttuja*-1));
             }
-            catch (Exception e) {
-                System.out.println("ratkaisu meni nenilleen");
+        } else if (pieninMuuttuja>0) {
+            for (Osatekija ot : osatekijat) {
+               ot.jaa(new Osatekija(1, pieninMuuttuja));
             }
         }
-        if (vasenpuoli.size()==2 && oikeapuoli.size()==1) {
-            try {
-                Osatekija n2 = (Osatekija) vasenpuoli.get(0);
-                Osatekija n = (Osatekija) vasenpuoli.get(1);
-                Osatekija vakio = (Osatekija) oikeapuoli.get(0);
-                vakio.lisaaMinus();
-                this.ratkaiseToisenAsteenYhtalo(n2.getValue(), n.getValue(), vakio.getValue());
+        this.jarjestaOsatekijat();
+        System.out.println("välitulostus ratkaiseKahdenOsatekijanYhtalo() metodissa");
+        System.out.println(yhtalo);
+        
+        Osatekija n = osatekijat.get(0);
+        Osatekija vakio = osatekijat.get(1);
+        vakio.jaa(n.getValue());
+        n.jaa(n.getValue());
+    }
+    
+    public void ratkaiseKolmenOsatekijanYhtalo() {
+        List<Osatekija> osatekijat = yhtalo.getOsatekijat();
+        double pieninMuuttuja = osatekijat.get(2).getVariable();
+        if (pieninMuuttuja<0) {
+            for (Osatekija ot : osatekijat) {
+                ot.kerro(new Osatekija(1, pieninMuuttuja*-1));
             }
-            catch (Exception e) {
-                System.out.println("ratkaisu meni nenilleen");
+        } else if (pieninMuuttuja>0) {
+            for (Osatekija ot : osatekijat) {
+               ot.jaa(new Osatekija(1, pieninMuuttuja));
             }
-        } 
+        }
+        this.jarjestaOsatekijat();
+        for (int i = osatekijat.size()-1; i >= 0; i--) {
+            osatekijat.get(i).jaa(osatekijat.get(0).getValue());
+        }
+        System.out.println("välitulostus ratkaiseKolmenOsatekijanYhtalo() metodissa");
+        System.out.println(yhtalo);
+        
+        if (osatekijat.get(0).getVariable()==2) {
+            double n2 = osatekijat.get(0).getValue();
+            double n = osatekijat.get(1).getValue();
+            double vakio = osatekijat.get(2).getValue();
+            this.ratkaiseToisenAsteenYhtalo(n2,n,vakio);
+        }
     }
     
     public void ratkaiseToisenAsteenYhtalo(double a, double b, double c) {
@@ -96,7 +120,7 @@ public class Laskin {
         }
         
         DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(5);
+        df.setMaximumFractionDigits(6);
         
         if (mahdollinen) {
             System.out.println("metodimme laskee vastauksiksi:\n\tr1= " + df.format(r1) + "\n\tr2= " + df.format(r2));
@@ -105,4 +129,51 @@ public class Laskin {
             df.format(r1) + "+" + df.format(r2) +"i\n\tr2= " + df.format(r1) + "-" + df.format(r2) +"i");
         }
     }
+    
+    public void laskeYhteenKaikkiOsatekijoina() {
+        List<Osatekija> osatekijat = yhtalo.getOsatekijat();
+        for (int i = 0; i < osatekijat.size(); i++) {
+            Osatekija eka = osatekijat.get(i);
+            for (int j = 0; j < osatekijat.size(); j++) {
+                if (i!=j && eka.summaa(osatekijat.get(j))) {
+                    osatekijat.add(i, eka);
+                    osatekijat.remove(i + 1);
+                    osatekijat.remove(j);
+                    j--;
+                }
+            }
+        }
+    }
+    
+    public void jarjestaOsatekijat() {
+        Collections.sort(yhtalo.getOsatekijat(), new OsatekijaComparator());
+        // lisää tähän mahdollinen suurimman muuttujan arvolla jako?
+        // nyt jakolasku tapahtuu kahdesti molemmissi ratkaiseYhtalOsatekijoilla -metodeissa
+    }
+    /*
+    public void jarjestaYhtalo() {
+        List<Komponentti> vasenpuoli=yhtalo.getVasenpuoli(), oikeapuoli=yhtalo.getOikeapuoli();
+        List<Komponentti> jarjestettyoikea = jarjestaYhtalonPuoli(vasenpuoli, true);
+        List<Komponentti> jarjestettyvasen = jarjestaYhtalonPuoli(oikeapuoli, false);
+        vasenpuoli.addAll(jarjestettyvasen);
+        oikeapuoli.addAll(jarjestettyoikea);
+    }
+    
+    public List<Komponentti> jarjestaYhtalonPuoli(List<Komponentti> lista, boolean onkoVasenPuoli) {
+        List<Komponentti> palautettava = new ArrayList<Komponentti>();
+        for (int i = 0; i < lista.size(); i++) {
+            Komponentti k = lista.get(i);
+            if (k.getClass().equals(new Osatekija(0,0).getClass())) {
+                Osatekija ot = (Osatekija) k;
+                if ((ot.getVariable()==0 && onkoVasenPuoli) || (ot.getVariable()>0 && onkoVasenPuoli==false)) {
+                    ot.muutaNegatiiviseksi();
+                    palautettava.add(ot);
+                    lista.remove(i);
+                    i--;
+                }
+            }
+        }
+        return palautettava;
+    }
+    */
 }

@@ -1,8 +1,7 @@
 package induktoija4000.kayttoliittyma;
 
 import induktoija4000.laskin.Laskin;
-import induktoija4000.laskin.komponentit.*;
-import induktoija4000.laskin.Parser;
+import induktoija4000.turhat.Parser;
 import java.util.Scanner;
 
 public class Kayttis {
