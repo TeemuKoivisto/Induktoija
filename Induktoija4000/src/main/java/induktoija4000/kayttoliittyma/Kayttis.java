@@ -25,9 +25,6 @@ public class Kayttis {
             System.out.println("Anna lauseke esim. n+3=n-12");
             System.out.println("Kayta muuttujana n:aa.");
             
-//            Yhtalo yhtalo = new Yhtalo("");
-//            yhtalo.ratkaiseToisenAsteenYhtalo(2, 5, -3);
-//            
             String syote = lukija.nextLine();
             
             laskin.annaSyote(syote);

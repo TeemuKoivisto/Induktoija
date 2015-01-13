@@ -41,7 +41,8 @@ public class Laskin {
         System.out.println(yhtalo);
         
         System.out.println("\nratkaistaan yhtalo");
-        ratkaiseYhtalo();
+        this.ratkaiseYhtalo();
+        System.out.println(yhtalo);
     }
     
     public void ratkaiseYhtalo() {

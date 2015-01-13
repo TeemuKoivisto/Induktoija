@@ -1,15 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package induktoija4000.laskin;
 
-import induktoija4000.komponentit.Yhtalo;
-import induktoija4000.komponentit.Osatekija;
-import induktoija4000.komponentit.Komponentti;
-import induktoija4000.komponentit.Termi;
-import induktoija4000.komponentit.Lauseke;
+import induktoija4000.komponentit.*;
 import java.util.List;
 
 public class Lukija {
@@ -102,7 +93,7 @@ public class Lukija {
     }
     
     public Komponentti lueTermiLoppuun(char c) {
-        if (c == '(') {
+        if (c == '(' || lueMerkki(paikka + 1) == '(') {
             lueMerkki();
             return lueLausekeLoppuun();
         } else {

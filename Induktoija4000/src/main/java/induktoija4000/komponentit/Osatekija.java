@@ -45,23 +45,22 @@ public class Osatekija implements Komponentti{
     }
     
     public boolean jaa(Komponentti k) {
-        if (k.getClass().equals(this.getClass())) {
+        if (k.onkoOsatekija()) {
             // 6/5
             Osatekija ot = (Osatekija) k;
             return jaa(ot);
         }
-        if (k.getClass().equals(new Termi(k, '/', k).getClass())) {
+        if (k.onkoTermi()) {
             // mahdollinen jos vain supistettu termi
             // 3/(5+x)*6 ???
             Termi t = (Termi) k;
-            boolean onko = t.supista();
-            if (onko) {
+            if (t.supista()) {
                 return jaa(t.getTulos());
             } else {
                 return false;
             }
         }
-        if (k.getClass().equals(new Lauseke().getClass())) {
+        if (k.onkoLauseke()) {
             // 3/(3+x)
             Lauseke l = (Lauseke) k;
             return l.jaa(this);
@@ -70,23 +69,22 @@ public class Osatekija implements Komponentti{
     }
     
     public boolean kerro(Komponentti k) {
-        if (k.getClass().equals(this.getClass())) {
+        if (k.onkoOsatekija()) {
             // 6*5
             Osatekija ot = (Osatekija) k;
             return kerro(ot);
         }
-        if (k.getClass().equals(new Termi(k, '*', k).getClass())) {
+        if (k.onkoTermi()) {
             // mahdollinen jos vain supistettu termi
             // 3*(5+x)/6 ???
             Termi t = (Termi) k;
-            boolean onko = t.supista();
-            if (onko) {
+            if (t.supista()) {
                 return kerro(t.getTulos());
             } else {
                 return false;
             }
         }
-        if (k.getClass().equals(new Lauseke().getClass())) {
+        if (k.onkoLauseke()) {
             // 3(3+x)
             Lauseke l = (Lauseke) k;
             return l.kerro(this);

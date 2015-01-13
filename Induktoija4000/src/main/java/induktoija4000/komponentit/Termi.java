@@ -1,5 +1,8 @@
 package induktoija4000.komponentit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Termi implements Komponentti{
     
     private Komponentti ekaTekija;
@@ -8,10 +11,6 @@ public class Termi implements Komponentti{
     private boolean supistettu;
     private char tyyppi;
     
-    public Termi() {
-        supistettu = false;
-    }
-    
     public Termi(Komponentti k, char c, Komponentti k2) {
         ekaTekija = k;
         tyyppi = c;
@@ -19,14 +18,21 @@ public class Termi implements Komponentti{
         supistettu = false;
     }
     
-    public Termi(Komponentti k, char c) {
-        ekaTekija = k;
-        tyyppi = c;
-        supistettu = false;
-    }
-    
-    public void lisaaTokatekija(Komponentti k) {
-        tokaTekija = k;
+    public List<Komponentti> hajotaTekijoihin() {
+        List<Komponentti> sisalto = new ArrayList<>();
+        
+        // entä jos juuri tämä (x+1)/(x+2)
+        // 
+        
+        // ja tässä nyt pilkotaan osiksi koko paska
+        // huh huh
+        // eli tämä tapahtuu vain, jos jompikumpi tekijöistä
+        // on lauseke
+        // eli jokainen lausekkeen jäsenistä jaetaan tai kerrotaan
+        // tyypin mukaan ja paska palautetaan uuteena lausekkeena/
+        // listana, jonka jokainen jäsen on jaettu tai kerrottu
+        // kenties kaikki summataan kerran? helpottais...
+        return sisalto;
     }
     
     public boolean summaa(Osatekija ot) {
@@ -37,7 +43,6 @@ public class Termi implements Komponentti{
     }
     
     public boolean kerro(Osatekija ot) {
-        supista();
         if (supistettu) {
             return tulos.kerro(ot);
         } else {
@@ -46,7 +51,6 @@ public class Termi implements Komponentti{
     }
     
     public boolean jaa(Osatekija ot) {
-        supista();
         if (supistettu) {
             return tulos.jaa(ot);
         } else {
@@ -55,11 +59,11 @@ public class Termi implements Komponentti{
     }
     
     public boolean kerro(Komponentti k) {
-        if (k.getClass().equals(new Osatekija(0,0).getClass())) {
+        if (k.onkoOsatekija()) {
             // 3*3*3 >> 3*3 termi kertaa osatekija 3
             return kerro((Osatekija) k);
         }
-        if (k.getClass().equals(this.getClass())) {
+        if (k.onkoTermi()) {
             // tarkoittaa nyt, että termi on supistettu
             // 3*3*3 >> 9*3 >> termi * termi
             Termi t = (Termi) k;
@@ -70,7 +74,7 @@ public class Termi implements Komponentti{
             }
             
         }
-        if (k.getClass().equals(new Lauseke().getClass())) {
+        if (k.onkoLauseke()) {
             // 4*3(34x+3)
             Lauseke l = (Lauseke) k;
             boolean onnistuiko = true;
@@ -85,11 +89,11 @@ public class Termi implements Komponentti{
     }
     
     public boolean jaa(Komponentti k) {
-        if (k.getClass().equals(new Osatekija(0,0).getClass())) {
+        if (k.onkoOsatekija()) {
             // 3*3/3
             return jaa((Osatekija) k);
         }
-        if (k.getClass().equals(this.getClass())) {
+        if (k.onkoTermi()) {
             // tarkoittaa nyt, että termi on supistettu
             // 3*3/3 >> 9/3 >> termi / termi
             Termi t = (Termi) k;
@@ -100,7 +104,7 @@ public class Termi implements Komponentti{
             }
             
         }
-        if (k.getClass().equals(new Lauseke().getClass())) {
+        if (k.onkoLauseke()) {
             // 4*3/(34x+3)
             Lauseke l = (Lauseke) k;
             boolean onnistuiko = true;
@@ -146,16 +150,12 @@ public class Termi implements Komponentti{
         return supistettu;
     }
     
-    public boolean lisaa(char c) {
-        return true;
-    }
-    
     public String palautaTyyppi() {
         return "t";
     }
     
     public void muutaNegatiiviseksi() {
-        if (supista()) {
+        if (supistettu) {
             tulos.muutaNegatiiviseksi();
         } else {
             ekaTekija.muutaNegatiiviseksi();

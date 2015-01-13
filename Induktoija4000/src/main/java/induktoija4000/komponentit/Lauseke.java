@@ -30,12 +30,12 @@ public class Lauseke implements Komponentti{
     
     public boolean kerro(Komponentti k) {
         // (3-x)*7
-        if (k.getClass().equals(new Osatekija(0,0).getClass())) {
+        if (k.onkoOsatekija()) {
             return kerro((Osatekija) k);
         }
         // (3+x)*3/5        (3+x)*3*3 >> ((l * ot)t * ot)
         // ainoa vaihtoehto siis, että jo supistettu termi?
-        if (k.getClass().equals(new Termi(k, '*', k).getClass())) {
+        if (k.onkoTermi()) {
             Termi t = (Termi) k;
             if (t.supista()) {
                 return kerro(t.getTulos());
@@ -44,7 +44,7 @@ public class Lauseke implements Komponentti{
             }
         }
         // (3+x)(3+x)
-        if (k.getClass().equals(this.getClass())) {
+        if (k.onkoLauseke()) {
             Lauseke l = (Lauseke) k;
             boolean onnistuiko = true;
             for (Komponentti kom : sisalto) {
@@ -61,12 +61,12 @@ public class Lauseke implements Komponentti{
     
     public boolean jaa(Komponentti k) {
         // (3-x)/7
-        if (k.getClass().equals(new Osatekija(0,0).getClass())) {
+        if (k.onkoOsatekija()) {
             return jaa((Osatekija) k);
             // enta jos (3+x)/3x >> 1/x + 1/3
         }
         // jo supistettu termi?
-        if (k.getClass().equals(new Termi(k, '*', k).getClass())) {
+        if (k.onkoTermi()) {
             Termi t = (Termi) k;
             if (t.supista()) {
                 return jaa(t.getTulos());
@@ -79,7 +79,7 @@ public class Lauseke implements Komponentti{
         // 1 + x^-1/3 + 1/3x + 1
         //
         // 3/(3+x) + x/(3+x)
-        if (k.getClass().equals(this.getClass())) {
+        if (k.onkoLauseke()) {
             Lauseke l = (Lauseke) k;
             boolean onnistuiko = true;
             for (Komponentti kom : sisalto) {
@@ -156,12 +156,12 @@ public class Lauseke implements Komponentti{
     
     public String toString() {
         String tuloste = "(";
-        for (Komponentti k : sisalto) {
-            if (k.palautaTyyppi().equals("t")) {
+        for (int i = 0; i < sisalto.size(); i++) {
+            Komponentti k = sisalto.get(i);
+            tuloste += k.toString();
+            if ((k.onkoOsatekija() || k.onkoTermi()) && i != sisalto.size()-1) {
                 tuloste += " ";
             }
-            tuloste += k.toString();
-            
         }
         tuloste += ")";
         return tuloste;
