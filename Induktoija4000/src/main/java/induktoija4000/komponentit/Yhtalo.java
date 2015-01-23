@@ -74,7 +74,6 @@ public class Yhtalo {
         for (Komponentti k : oikeapuoli) {
             System.out.print(k.palautaTyyppi() +" ");
         }
-        
         System.out.println("");
     }
     

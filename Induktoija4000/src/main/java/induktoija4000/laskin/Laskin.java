@@ -22,6 +22,10 @@ public class Laskin {
         yhtalo = lukija.lueKaikki();
     }
     
+    public void annaYhtalo(Yhtalo y) {
+        yhtalo = y;
+    }
+    
     public void laske() {
         System.out.println("\nluetaan");
         System.out.println(yhtalo);
@@ -177,4 +181,8 @@ public class Laskin {
         return palautettava;
     }
     */
+    
+    public Yhtalo getYhtalo() {
+        return yhtalo;
+    }
 }
