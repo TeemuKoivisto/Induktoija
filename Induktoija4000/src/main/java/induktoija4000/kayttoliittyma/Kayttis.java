@@ -1,7 +1,6 @@
 package induktoija4000.kayttoliittyma;
 
 import induktoija4000.laskin.Laskin;
-import induktoija4000.turhat.Parser;
 import java.util.Scanner;
 
 public class Kayttis {
@@ -21,7 +20,6 @@ public class Kayttis {
             System.out.println("--------------");
 
             System.out.println("Abandon all yer hope who enter here.");
-            System.out.println("INDUKTOIJA4000 is a small application for induction calculus.");
             System.out.println("Anna lauseke esim. n+3=n-12");
             System.out.println("Kayta muuttujana n:aa.");
             

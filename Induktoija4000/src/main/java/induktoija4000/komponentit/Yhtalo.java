@@ -54,6 +54,10 @@ public class Yhtalo {
         }
     }
     
+    public void annaVasenPuoli(List<Komponentti> l) { vasenpuoli = l; }
+    
+    public void annaOikeaPuoli(List<Komponentti> l) { oikeapuoli = l; }
+    
     public List<Komponentti> getVasenpuoli() {
         return vasenpuoli;
     }

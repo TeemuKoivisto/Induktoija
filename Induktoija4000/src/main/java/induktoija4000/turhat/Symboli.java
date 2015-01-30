@@ -1,6 +1,0 @@
-package induktoija4000.turhat;
-
-public enum Symboli {
-    
-    NULL,NUMERO,MUUTTUJA,PLUS,MINUS,KERTO,JAKO,POTENSSI,YHTAKUIN,SUUREMPIKUIN,PIENEMPIKUIN;
-}

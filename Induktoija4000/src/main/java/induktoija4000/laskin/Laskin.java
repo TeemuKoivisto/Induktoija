@@ -20,6 +20,7 @@ public class Laskin {
     public void annaSyote(String s) {
         lukija.annaSyote(s);
         yhtalo = lukija.lueKaikki();
+//        yhtalo = lukija.lueKaikki();
     }
     
     public void annaYhtalo(Yhtalo y) {

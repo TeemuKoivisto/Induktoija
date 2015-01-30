@@ -1,6 +1,7 @@
 package induktoija4000.laskin;
 
 import induktoija4000.komponentit.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Lukija {
@@ -25,6 +26,60 @@ public class Lukija {
     }
     
     public Yhtalo lueKaikki() {
+        List<Komponentti> lista = lueMerkkiinAsti('=');
+        yhtalo.annaVasenPuoli(lista);
+        lista = lueMerkkiinAsti('Å');
+        yhtalo.annaOikeaPuoli(lista);
+        return yhtalo;
+    }
+    
+    public List<Komponentti> lueMerkkiinAsti(char merkki) {
+        List<Komponentti> lista = new ArrayList<>();
+        boolean nega = false;
+        while (paikka<s.length()) {
+            char c = lueMerkki();
+            if ((c >= '0' && c <= '9')|| c == 'n' || c == 'x') {
+                Osatekija ot = lueOsatekijaLoppuun();
+                if (nega) {
+                    ot.muutaNegatiiviseksi();
+                    nega = false;
+                }
+                lista.add(ot);
+            } else if (c == '-') {
+                nega = true;
+            } else if (c == '*' || c=='/' || c == '(') {
+                if (c == '(' && (lueMerkki(paikka-1)=='+' || lueMerkki(paikka-1)=='-' || lueMerkki(paikka-1)=='=')) {
+                    Lauseke lause = lueLauseke();
+                    lista.add(lause);
+                } else {
+                    Termi termi = new Termi(lista.get(lista.size()-1), c, lueTermiLoppuun(c));
+                    lista.remove(lista.size()-1);
+                    lista.add(termi);
+                }
+            } else if (c == '=' && merkki == '=') {
+                return lista;
+            } else if (c == ')' && merkki == ')') {
+                return lista;
+            } else if (c == '+') {
+            } else if (c == 's' && lueMerkki() == 'i' && lueMerkki() == 'g') {
+                Summa summa = lueSummaLoppuun();
+                lista.add(summa);
+            } else {
+                System.out.println("paskaa syötit. hyi hyi.");
+            }
+        }
+        return lista;
+    }
+    
+    public Lauseke lueLauseke() {
+        Lauseke lauseke = new Lauseke();
+        List<Komponentti> lista = lauseke.getLauseke();
+        lista = lueMerkkiinAsti(')');
+        return lauseke;
+    }
+    
+    /*
+    public Yhtalo lue() {
         List<Komponentti> lista = yhtalo.getVasenpuoli();
         boolean nega = false;
         while (paikka<s.length()) {
@@ -90,12 +145,33 @@ public class Lukija {
         }
         System.out.println("puuttuva )-sulku(!)");
         return lauseke;
-    }
+    }*/
     
+    // sig(n+1,i=3,n+3)
+    public Summa lueSummaLoppuun() {
+        List<Komponentti> lista = new ArrayList<>();
+        Osatekija ot = new Osatekija(0,0);
+        if (lueMerkki(paikka)=='(') {
+            lueMerkki();
+        }
+        while (s.charAt(paikka) != ',') {
+            Osatekija ott = lueOsatekijaLoppuun();
+            lista.add(ott);
+        }
+        paikka++;
+        if (lueMerkki(paikka)=='i' && lueMerkki(paikka+1) == '=') {
+            paikka++;
+            paikka++;
+            ot = lueOsatekijaLoppuun();
+        }
+        Summa summa = new Summa(lista, (int) ot.getValue());
+        return summa;
+    }
+        
     public Komponentti lueTermiLoppuun(char c) {
         if (c == '(' || lueMerkki(paikka + 1) == '(') {
             lueMerkki();
-            return lueLausekeLoppuun();
+            return lueLauseke();
         } else {
             lueMerkki();
             return lueOsatekijaLoppuun();

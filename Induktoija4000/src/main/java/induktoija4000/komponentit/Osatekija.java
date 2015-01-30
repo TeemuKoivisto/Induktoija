@@ -6,6 +6,7 @@ public class Osatekija implements Komponentti{
     private double muuttuja;
     private char variable;
     private boolean supistettu;
+    private Komponentti eksponentti;
     
     public Osatekija(double a, double d, char var) {
         arvo = a;
@@ -17,6 +18,10 @@ public class Osatekija implements Komponentti{
         arvo = a;
         muuttuja = m;
         variable = 'n';
+    }
+    
+    public void lisaaEksponentti(Komponentti e) {
+        eksponentti = e;
     }
     
     public void alusta(double a, double m) {
@@ -107,6 +112,10 @@ public class Osatekija implements Komponentti{
         this.arvo *= ot.getValue();
         this.muuttuja += ot.getVariable();
         return true;
+    }
+    
+    public Komponentti getEksponentti() {
+        return eksponentti;
     }
     
     public double getValue() {
