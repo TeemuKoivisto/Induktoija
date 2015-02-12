@@ -1,0 +1,13 @@
+Käyttötapaus: yhtälön syöttäminen
+Käyttäjä: käyttäjä
+Tavoite: saada yhtälö ratkaistuksi
+Laukaisija: himo laskea
+Käyttötapauksen kulku: Asiakkaan tarkastellessa tuotelistaa hän näkee kiinnostavan tuotteen. Asiakas klikkaa tuotteen yhteydessä olevaa Lisätietoja-linkkiä ja ohjataan sivustolle Ratebeer.com.
+Poikkeuksellinen toiminta: Ratebeer.com:in palvelin on alhaalla eikä asiakas näe haluamiaan tietoja.
+
+Käyttötapaus: induktion syöttäminen
+Käyttäjä: käyttäjä
+Tavoite: saada induktio ratkastuksi
+Laukaisija: himo induktoida
+Käyttötapauksen kulku: Asiakkaan tarkastellessa tuotelistaa hän näkee kiinnostavan tuotteen. Asiakas klikkaa tuotteen yhteydessä olevaa Lisätietoja-linkkiä ja ohjataan sivustolle Ratebeer.com.
+Poikkeuksellinen toiminta: Ratebeer.com:in palvelin on alhaalla eikä asiakas näe haluamiaan tietoja.

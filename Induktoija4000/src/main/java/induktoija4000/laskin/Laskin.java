@@ -1,7 +1,7 @@
 package induktoija4000.laskin;
 
 import induktoija4000.komponentit.Yhtalo;
-import induktoija4000.komponentit.Osatekija;
+import induktoija4000.komponentit.Termi;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +20,6 @@ public class Laskin {
     public void annaSyote(String s) {
         lukija.annaSyote(s);
         yhtalo = lukija.lueKaikki();
-//        yhtalo = lukija.lueKaikki();
     }
     
     public void annaYhtalo(Yhtalo y) {
@@ -28,84 +27,97 @@ public class Laskin {
     }
     
     public void laske() {
-        System.out.println("\nluetaan");
+        System.out.println("\nluetaan...");
         System.out.println(yhtalo);
         yhtalo.tulostaTyypit();
         
-        System.out.println("\nsupistetaan osatekijoiksi");
-        yhtalo.supistaKaikkiOsatekijoiksi();
+        System.out.println("\nsupistetaan termeiksi...");
+        boolean induktoinko = yhtalo.supistaKaikkiTermeiksi();
         System.out.println(yhtalo);
         yhtalo.tulostaTyypit();
         
-        System.out.println("\nlasketaan kaikki yhteen");
-        this.laskeYhteenKaikkiOsatekijoina();
+        System.out.println("\nlasketaan kaikki yhteen...");
+        if (induktoinko==true) {
+            this.laskeYhteenKaikkiTermeina();
+        } else {
+            System.out.println("SUPRISE INDUKTIO");
+            this.induktoi();
+            return;
+        }
         System.out.println(yhtalo);
         
-        System.out.println("\njarjestetaan kaikki");
-        this.jarjestaOsatekijat();
+        System.out.println("\njarjestetaan kaikki...");
+        this.jarjestaTermit();
         System.out.println(yhtalo);
         
-        System.out.println("\nratkaistaan yhtalo");
+        System.out.println("\nratkaistaan yhtalo...");
         this.ratkaiseYhtalo();
-        System.out.println(yhtalo);
+        //System.out.println(yhtalo);
+    }
+    
+    public void induktoi() {
+        
     }
     
     public void ratkaiseYhtalo() {
-        List<Osatekija> osatekijat = yhtalo.getOsatekijat();
-        if (osatekijat.size()==2) {
-            this.ratkaiseKahdenOsatekijanYhtalo();
-        } else if (osatekijat.size()==3) {
-            this.ratkaiseKolmenOsatekijanYhtalo();
+        List<Termi> termit = yhtalo.getTermit();
+        if (termit.size()==2) {
+            this.ratkaiseKahdenTerminYhtalo();
+        } else if (termit.size()==3) {
+            this.ratkaiseKolmenTerminYhtalo();
         } else {
             System.out.println("vituix men ratkaiseYhtalo()");
+            System.out.println("termejä joko 1 tai >3");
         }
     }
     
-    public void ratkaiseKahdenOsatekijanYhtalo() {
-        List<Osatekija> osatekijat = yhtalo.getOsatekijat();
-        double pieninMuuttuja = osatekijat.get(1).getVariable();
+    public void ratkaiseKahdenTerminYhtalo() {
+        List<Termi> termit = yhtalo.getTermit();
+        double pieninMuuttuja = termit.get(1).getVariable();
         if (pieninMuuttuja<0) {
-            for (Osatekija ot : osatekijat) {
-                ot.kerro(new Osatekija(1, pieninMuuttuja*-1));
+            for (Termi ot : termit) {
+                ot.kerro(new Termi(1, pieninMuuttuja*-1));
             }
         } else if (pieninMuuttuja>0) {
-            for (Osatekija ot : osatekijat) {
-               ot.jaa(new Osatekija(1, pieninMuuttuja));
+            for (Termi ot : termit) {
+               ot.jaa(new Termi(1, pieninMuuttuja));
             }
         }
-        this.jarjestaOsatekijat();
+        this.jarjestaTermit();
         System.out.println("välitulostus ratkaiseKahdenOsatekijanYhtalo() metodissa");
         System.out.println(yhtalo);
         
-        Osatekija n = osatekijat.get(0);
-        Osatekija vakio = osatekijat.get(1);
+        Termi n = termit.get(0);
+        Termi vakio = termit.get(1);
         vakio.jaa(n.getValue());
         n.jaa(n.getValue());
+        
+        System.out.println("\tn= " + vakio.getValue());
     }
     
-    public void ratkaiseKolmenOsatekijanYhtalo() {
-        List<Osatekija> osatekijat = yhtalo.getOsatekijat();
-        double pieninMuuttuja = osatekijat.get(2).getVariable();
+    public void ratkaiseKolmenTerminYhtalo() {
+        List<Termi> termit = yhtalo.getTermit();
+        double pieninMuuttuja = termit.get(2).getVariable();
         if (pieninMuuttuja<0) {
-            for (Osatekija ot : osatekijat) {
-                ot.kerro(new Osatekija(1, pieninMuuttuja*-1));
+            for (Termi t : termit) {
+                t.kerro(new Termi(1, pieninMuuttuja*-1));
             }
         } else if (pieninMuuttuja>0) {
-            for (Osatekija ot : osatekijat) {
-               ot.jaa(new Osatekija(1, pieninMuuttuja));
+            for (Termi t : termit) {
+               t.jaa(new Termi(1, pieninMuuttuja));
             }
         }
-        this.jarjestaOsatekijat();
-        for (int i = osatekijat.size()-1; i >= 0; i--) {
-            osatekijat.get(i).jaa(osatekijat.get(0).getValue());
+        this.jarjestaTermit();
+        for (int i = termit.size()-1; i >= 0; i--) {
+            termit.get(i).jaa(termit.get(0).getValue());
         }
         System.out.println("välitulostus ratkaiseKolmenOsatekijanYhtalo() metodissa");
         System.out.println(yhtalo);
         
-        if (osatekijat.get(0).getVariable()==2) {
-            double n2 = osatekijat.get(0).getValue();
-            double n = osatekijat.get(1).getValue();
-            double vakio = osatekijat.get(2).getValue();
+        if (termit.get(0).getVariable()==2) {
+            double n2 = termit.get(0).getValue();
+            double n = termit.get(1).getValue();
+            double vakio = termit.get(2).getValue();
             this.ratkaiseToisenAsteenYhtalo(n2,n,vakio);
         }
     }
@@ -136,10 +148,10 @@ public class Laskin {
         }
     }
     
-    public void laskeYhteenKaikkiOsatekijoina() {
-        List<Osatekija> osatekijat = yhtalo.getOsatekijat();
+    public void laskeYhteenKaikkiTermeina() {
+        List<Termi> osatekijat = yhtalo.getTermit();
         for (int i = 0; i < osatekijat.size(); i++) {
-            Osatekija eka = osatekijat.get(i);
+            Termi eka = osatekijat.get(i);
             for (int j = 0; j < osatekijat.size(); j++) {
                 if (i!=j && eka.summaa(osatekijat.get(j))) {
                     osatekijat.add(i, eka);
@@ -151,8 +163,8 @@ public class Laskin {
         }
     }
     
-    public void jarjestaOsatekijat() {
-        Collections.sort(yhtalo.getOsatekijat(), new OsatekijaComparator());
+    public void jarjestaTermit() {
+        Collections.sort(yhtalo.getTermit(), new TermiComparator());
         // lisää tähän mahdollinen suurimman muuttujan arvolla jako?
         // nyt jakolasku tapahtuu kahdesti molemmissi ratkaiseYhtalOsatekijoilla -metodeissa
     }
@@ -169,8 +181,8 @@ public class Laskin {
         List<Komponentti> palautettava = new ArrayList<Komponentti>();
         for (int i = 0; i < lista.size(); i++) {
             Komponentti k = lista.get(i);
-            if (k.getClass().equals(new Osatekija(0,0).getClass())) {
-                Osatekija ot = (Osatekija) k;
+            if (k.getClass().equals(new Termi(0,0).getClass())) {
+                Termi ot = (Termi) k;
                 if ((ot.getVariable()==0 && onkoVasenPuoli) || (ot.getVariable()>0 && onkoVasenPuoli==false)) {
                     ot.muutaNegatiiviseksi();
                     palautettava.add(ot);

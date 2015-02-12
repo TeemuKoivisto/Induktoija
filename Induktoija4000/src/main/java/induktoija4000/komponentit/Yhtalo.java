@@ -7,16 +7,16 @@ public class Yhtalo {
     
     private List<Komponentti> vasenpuoli;
     private List<Komponentti> oikeapuoli;
-    private List<Osatekija> osatekijoina;
+    private List<Termi> termeina;
     
     public Yhtalo() {
         vasenpuoli = new ArrayList<Komponentti>();
         oikeapuoli = new ArrayList<Komponentti>();
     }
     
-    public boolean supistaKaikkiOsatekijoiksi() {
+    public boolean supistaKaikkiTermeiksi() {
         if (supista(vasenpuoli) && supista(oikeapuoli)) {
-            this.muutaYhtaloOsatekijoiksi();
+            this.muutaYhtaloTermeiksi();
             return true;
         } else {
             return false;
@@ -30,27 +30,29 @@ public class Yhtalo {
             if (k.supista()==false) {
                 supistuiko = false;
             } else {
-                if (k.onkoTermi()) {
-                    Termi t = (Termi) k;
-                    lista.add(i, t.getTulos());
+                if (k.onkoLaskutoimitus()) {
+                    Laskutoimitus la = (Laskutoimitus) k;
+                    lista.add(i, la.getTulos());
+                    lista.remove(i+1);
+                } else if (k.onkoLauseke()) {
+                    Lauseke l = (Lauseke) k;
+                    lista.add(i, l.getTulos());
                     lista.remove(i+1);
                 }
-                // tähän kenties if (k.onkoLauseke()) {
-                // jos lausekekin on nyt supistettu
             }
             
         }
         return supistuiko;
     }
     
-    public void muutaYhtaloOsatekijoiksi() {
-        osatekijoina = new ArrayList<Osatekija>();
+    public void muutaYhtaloTermeiksi() {
+        termeina = new ArrayList<Termi>();
         for (Komponentti k : vasenpuoli) {
-            osatekijoina.add((Osatekija) k);
+            termeina.add((Termi) k);
         }
         for (Komponentti k : oikeapuoli) {
             k.muutaNegatiiviseksi();
-            osatekijoina.add((Osatekija) k);
+            termeina.add((Termi) k);
         }
     }
     
@@ -66,8 +68,8 @@ public class Yhtalo {
         return oikeapuoli;
     }
     
-    public List<Osatekija> getOsatekijat() {
-        return osatekijoina;
+    public List<Termi> getTermit() {
+        return termeina;
     }
     
     public void tulostaTyypit() {
@@ -83,7 +85,7 @@ public class Yhtalo {
     
     public String toString() {
         String tuloste = "";
-        if (this.osatekijoina == null) {
+        if (this.termeina == null) {
             for (Komponentti k : vasenpuoli) {
                 tuloste += k + " ";
             }
@@ -96,8 +98,8 @@ public class Yhtalo {
                 }
             }
         } else {
-            for (Osatekija ot : osatekijoina) {
-                tuloste += ot + " ";
+            for (Termi t : termeina) {
+                tuloste += t + " ";
             }
             tuloste += "= 0";
         }

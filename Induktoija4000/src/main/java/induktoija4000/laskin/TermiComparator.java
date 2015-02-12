@@ -5,7 +5,7 @@
  */
 package induktoija4000.laskin;
 
-import induktoija4000.komponentit.Osatekija;
+import induktoija4000.komponentit.Termi;
 import java.util.Comparator;
 import java.util.List;
 
@@ -13,16 +13,16 @@ import java.util.List;
  *
  * @author Teemu
  */
-public class OsatekijaComparator implements Comparator<Osatekija>{
+public class TermiComparator implements Comparator<Termi>{
 /*
     private List<Osatekija> osatekijat;
     
-    public OsatekijaComparator(List<Osatekija> ot) {
+    public TermiComparator(List<Osatekija> ot) {
         osatekijat=ot;
     }
   */  
     @Override
-    public int compare(Osatekija verrattava, Osatekija vertaaja) {
+    public int compare(Termi verrattava, Termi vertaaja) {
         if (verrattava.getVariable() > vertaaja.getVariable()) {
             return -1;
         } else if (verrattava.getVariable() == vertaaja.getVariable()) {

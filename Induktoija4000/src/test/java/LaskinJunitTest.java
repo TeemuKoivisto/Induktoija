@@ -65,41 +65,41 @@ public class LaskinJunitTest {
         //puuttuva lausekkeen toiminallisuus
         lukija.annaSyote("3*3 = x");
         yhtalo = lukija.lueKaikki();
-        assertTrue(yhtalo.getVasenpuoli().get(0).onkoTermi());
-        assertTrue(yhtalo.getOikeapuoli().get(0).onkoOsatekija());
+        assertTrue(yhtalo.getVasenpuoli().get(0).onkoLaskutoimitus());
+        assertTrue(yhtalo.getOikeapuoli().get(0).onkoTermi());
     }
     
     @Test
-    public void testaaOsatekijoidenYhteenlasku() {
-        Osatekija ot = new Osatekija(4, 0);
-        ot.summaa(new Osatekija(2, 0));
+    public void testaaTermienYhteenlasku() {
+        Termi ot = new Termi(4, 0);
+        ot.summaa(new Termi(2, 0));
         assertEquals(6.0, ot.getValue(), 0);
     }
     
     @Test
-    public void testaaOsatekijoidenKertolasku() {
-        Osatekija ot = new Osatekija(4, 0);
-        ot.kerro(new Osatekija(2, 0));
+    public void testaaTermienKertolasku() {
+        Termi ot = new Termi(4, 0);
+        ot.kerro(new Termi(2, 0));
         assertEquals(8.0, ot.getValue(), 0);
     }
     
     @Test
-    public void testaaOsatekijoidenJakolasku() {
-        Osatekija ot = new Osatekija(4, 0);
-        ot.jaa(new Osatekija(2,0));
+    public void testaaTermienJakolasku() {
+        Termi ot = new Termi(4, 0);
+        ot.jaa(new Termi(2,0));
         assertEquals(2.0, ot.getValue(), 0);
     }
     
     @Test
-    public void testaaKahdenOsatekijanKertoTerminSupistus() {
-        Termi t = new Termi(new Osatekija(3, 0), '*', new Osatekija(3, 0));
+    public void testaaKahdenTerminJaKahdenKertolaskunSupistus() {
+        Laskutoimitus t = new Laskutoimitus(new Termi(3, 0), '*', new Termi(3, 0));
         t.supista();
         assertEquals(9.0, t.getTulos().getValue(), 0);
     }
     
     @Test
-    public void testaaKahdenOsatekijanJakoTerminSupistus() {
-        Termi t = new Termi(new Osatekija(3, 0), '/', new Osatekija(3, 0));
+    public void testaaKahdestaTermistaKoostuvanJakolaskunSupistus() {
+        Laskutoimitus t = new Laskutoimitus(new Termi(3, 0), '/', new Termi(3, 0));
         t.supista();
         assertEquals(1.0, t.getTulos().getValue(), 0);
     }
@@ -108,16 +108,16 @@ public class LaskinJunitTest {
     public void testaaYhtalonTermienSupistus() {
         lukija.annaSyote("6/3=x*4");
         yhtalo = lukija.lueKaikki();
-        assertTrue(yhtalo.supistaKaikkiOsatekijoiksi());
+        assertTrue(yhtalo.supistaKaikkiTermeiksi());
     }
     
     @Test
     public void testaaLaskimenYhtalonYhteenlasku() {
         lukija.annaSyote("6/3+3=x*4-x");
         yhtalo = lukija.lueKaikki();
-        yhtalo.supistaKaikkiOsatekijoiksi();
+        yhtalo.supistaKaikkiTermeiksi();
         laskin.annaYhtalo(yhtalo);
-        laskin.laskeYhteenKaikkiOsatekijoina();
+        laskin.laskeYhteenKaikkiTermeina();
         assertTrue(laskin.getYhtalo().toString().equals("5.0 -3.0n = 0"));
     }
 }

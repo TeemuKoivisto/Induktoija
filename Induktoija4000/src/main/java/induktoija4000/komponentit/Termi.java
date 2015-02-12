@@ -1,178 +1,142 @@
 package induktoija4000.komponentit;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Termi implements Komponentti{
     
-    private Komponentti ekaTekija;
-    private Komponentti tokaTekija;
-    private Osatekija tulos;
-    private boolean supistettu;
-    private char tyyppi;
+    private double arvo;
+    private double muuttuja;
+    private char variable;
+    private Komponentti eksponentti;
     
-    public Termi(Komponentti k, char c, Komponentti k2) {
-        ekaTekija = k;
-        tyyppi = c;
-        tokaTekija = k2;
-        supistettu = false;
+    public Termi(double a, double d, char var) {
+        arvo = a;
+        muuttuja = d;
+        variable = var;
     }
     
-    public List<Komponentti> hajotaTekijoihin() {
-        List<Komponentti> sisalto = new ArrayList<>();
-        
-        // entä jos juuri tämä (x+1)/(x+2)
-        // 
-        
-        // ja tässä nyt pilkotaan osiksi koko paska
-        // huh huh
-        // eli tämä tapahtuu vain, jos jompikumpi tekijöistä
-        // on lauseke
-        // eli jokainen lausekkeen jäsenistä jaetaan tai kerrotaan
-        // tyypin mukaan ja paska palautetaan uuteena lausekkeena/
-        // listana, jonka jokainen jäsen on jaettu tai kerrottu
-        // kenties kaikki summataan kerran? helpottais...
-        return sisalto;
+    public Termi(double a, double m) {
+        arvo = a;
+        muuttuja = m;
+        variable = 'n';
     }
     
-    public boolean summaa(Osatekija ot) {
-        if (supistettu) {
-            return tulos.summaa(ot);
-        }
-        return false;
+    public void lisaaEksponentti(Komponentti e) {
+        eksponentti = e;
     }
     
-    public boolean kerro(Osatekija ot) {
-        if (supistettu) {
-            return tulos.kerro(ot);
-        } else {
-            return ekaTekija.kerro(ot);
-        }
+    public void alusta(double a, double m) {
+        arvo = a;
+        muuttuja = m;
     }
     
-    public boolean jaa(Osatekija ot) {
-        if (supistettu) {
-            return tulos.jaa(ot);
-        } else {
-            return ekaTekija.jaa(ot);
-        }
-    }
-    
-    public boolean kerro(Komponentti k) {
-        if (k.onkoOsatekija()) {
-            // 3*3*3 >> 3*3 termi kertaa osatekija 3
-            return kerro((Osatekija) k);
-        }
-        if (k.onkoTermi()) {
-            // tarkoittaa nyt, että termi on supistettu
-            // 3*3*3 >> 9*3 >> termi * termi
-            Termi t = (Termi) k;
-            if (t.supista()) {
-                kerro(t.getTulos());
-            } else {
-                return false;
-            }
-            
-        }
-        if (k.onkoLauseke()) {
-            // 4*3(34x+3)
-            Lauseke l = (Lauseke) k;
-            boolean onnistuiko = true;
-            for (Komponentti kom : l.getLauseke()) {
-                if (ekaTekija.kerro(kom)==false) {
-                    onnistuiko = false;
-                }
-            }
-            return onnistuiko;
-        }
-        return false;
-    }
-    
-    public boolean jaa(Komponentti k) {
-        if (k.onkoOsatekija()) {
-            // 3*3/3
-            return jaa((Osatekija) k);
-        }
-        if (k.onkoTermi()) {
-            // tarkoittaa nyt, että termi on supistettu
-            // 3*3/3 >> 9/3 >> termi / termi
-            Termi t = (Termi) k;
-            if (t.supista()) {
-                jaa(t.getTulos());
-            } else {
-                return false;
-            }
-            
-        }
-        if (k.onkoLauseke()) {
-            // 4*3/(34x+3)
-            Lauseke l = (Lauseke) k;
-            boolean onnistuiko = true;
-            for (Komponentti kom : l.getLauseke()) {
-                if (ekaTekija.jaa(kom)==false) {
-                    onnistuiko = false;
-                }
-            }
-            return onnistuiko;
-        }
-        return false;
+    public void muutaNegatiiviseksi() {
+        arvo *= -1.0;
     }
     
     public boolean supista() {
-        if (ekaTekija.supista()) {
-            if (tokaTekija.supista()) {
-                if (tyyppi=='/') {
-                    supistettu = ekaTekija.jaa(tokaTekija);
-                } else {
-                    supistettu = ekaTekija.kerro(tokaTekija);
-                }
-                if (supistettu) {
-                    if (ekaTekija.onkoOsatekija()) { tulos = (Osatekija) ekaTekija; }
-                    else if (ekaTekija.onkoTermi()) { Termi t = (Termi) ekaTekija; tulos = t.getTulos(); }
-                    else { Lauseke l = (Lauseke) ekaTekija; tulos = l.getTulos(); }
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-        
-    public Osatekija getTulos() {
-        if (supistettu) {
-            return tulos;
-        } else {
-            System.out.println("termin " + toString() + " getTulos feilas");
-            return new Osatekija(0, 0);
-        }
-    }
-    
-    public boolean onkoSupistettu() {
-        return supistettu;
+        return true;
     }
     
     public String palautaTyyppi() {
         return "t";
     }
     
-    public void muutaNegatiiviseksi() {
-        if (supistettu) {
-            tulos.muutaNegatiiviseksi();
+    public Termi muutaKomponenttiTermiksi(Komponentti k) {
+        Termi t = new Termi(0,0);
+        if (k.onkoLaskutoimitus()) {
+            Laskutoimitus la = (Laskutoimitus) k;
+            t = la.getTulos();
+        } else if (k.onkoLauseke()) {
+            Lauseke l = (Lauseke) k;
+            t = l.getTulos();
+        } else if (k.onkoTermi()) {
+            t = (Termi) k;
         } else {
-            ekaTekija.muutaNegatiiviseksi();
-            tokaTekija.muutaNegatiiviseksi();
+            throw new RuntimeException("se olikin summa. hups");
         }
+        return t;
     }
     
-    public boolean onkoOsatekija() { return false; }
+    public boolean summaa(Komponentti k) {
+        if (!k.supista()) {
+            return false;
+        }
+        Termi t = muutaKomponenttiTermiksi(k);
+        if (this.muuttuja==t.getVariable()) {
+            arvo += t.getValue();
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean jaa(Komponentti k) {
+        Termi t = muutaKomponenttiTermiksi(k);
+        return this.jaa(t);
+        // 6/6
+        // jos supistettu laskutoimitus?
+        // 6/((6+x)*6)) ??
+        // 6/(6+x)
+    }
+    
+    public boolean kerro(Komponentti k) {
+        Termi t = muutaKomponenttiTermiksi(k);
+        return this.kerro(t);
+        // 6*6
+        // 6*6*6 ??? ei? 6*((6+x)*6)) ???
+        // 6*(6+x)
+    }
+    
+    public Termi jaa(double d) {
+        this.arvo /= d;
+        return this;
+    }
+    
+    public boolean jaa(Termi t) {
+        this.arvo /= t.getValue();
+        this.muuttuja -= t.getVariable();
+        return true;
+    }
+    
+    public boolean kerro(Termi t) {
+        this.arvo *= t.getValue();
+        this.muuttuja += t.getVariable();
+        return true;
+    }
+    
+    public Komponentti getEksponentti() {
+        return eksponentti;
+    }
+    
+    public double getValue() {
+        return arvo;
+    }
+    
+    public double getVariable() {
+        return muuttuja;
+    }
     
     public boolean onkoTermi() { return true; }
+    
+    public boolean onkoLaskutoimitus() { return false; }
     
     public boolean onkoLauseke() { return false; }
     
     public String toString() {
-        if (supistettu) {
-            return "" + tulos;
+        if (muuttuja == 0) {
+            return "" + arvo;
+        } else if (arvo == 1 || arvo == -1) {
+            if (muuttuja == 1 && arvo == 1) {
+                return "n";
+            } else if (muuttuja == 1 && arvo ==-1) {
+                return "-n";
+            } else if (arvo == 1) {
+                return "n^" + muuttuja;
+            } else {
+                return "-n^" + muuttuja;
+            }
+        } else if (muuttuja == 1) {
+            return "" + arvo + "n";
+        } else {
+            return "" + arvo + "n^" + muuttuja;
         }
-        return "" + ekaTekija + tyyppi + tokaTekija;
     }
 }

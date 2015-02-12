@@ -1,8 +1,15 @@
-Käyttäjä kirjoittaa ohjelmalle syötteenä yhtälön, jonka
-lukija muuntaa yhtälö-luokan ilmentymäksi.
+Käyttäjä syöttää ohjelmalle syötteenä yhtälön, joka on
+joko tavallinen toisen asteen yhtälö tai INDUKTIO-lause.
 
-Tämän ilmentymän sitten laskin-luokka purkaa ja 
-supistaa mielensä mukaan kunnes saa jonkin asteisen ratkaisun.
+Ohjelman olisi tarkoitus induktoida täydellisesti
+yksinkertaisia induktio-lausekkeita kuten:
+sig(n,0,n)=(n(n+1))/2
+joka siis pätee ja jonka ohjelman olisi pystyttävä todistamaan
+induktioväitteen mukaisesti.
 
-Projekti on vielä kesken joten tätä ohjetta tullaan vielä
-päivittämään.
+Suurin haaste on sulkumerkkien eli lausekkeiden supistaminen,
+joka on osoittautunut pikkuisen haastavaksi jos lauseketta ei
+pystytä supistamaan yhdeksi termiksi kuten 2n.
+
+Esimerkissä n(n+1) muuttuisi arvoksi n^2 + n jota ohjelma ei vielä
+osaa ratkaista.

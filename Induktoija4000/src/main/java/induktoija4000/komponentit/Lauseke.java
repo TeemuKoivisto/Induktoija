@@ -6,7 +6,7 @@ import java.util.List;
 public class Lauseke implements Komponentti{
 
     private List<Komponentti> sisalto;
-    private Osatekija tulos;
+    private Termi tulos;
     private boolean supistettu;
     
     public Lauseke() {
@@ -14,11 +14,26 @@ public class Lauseke implements Komponentti{
         supistettu = false;
     }      
   
+    public Lauseke(List<Komponentti> s) {
+        sisalto = s;
+        supistettu = false;
+    }
+    
     public void lisaa(Komponentti k) {
         sisalto.add(k);
     }
     
-    public boolean kerro(Osatekija ot) {
+    public boolean jaa(Termi t) {
+        boolean onnistuiko = true;
+        for (Komponentti kom : sisalto) {
+            if (kom.jaa(t)==false) {
+                onnistuiko = false;
+            }
+        }
+        return onnistuiko;
+    }
+    
+    public boolean kerro(Termi ot) {
         boolean onnistuiko = true;
         for (Komponentti k : sisalto) {
             if (k.kerro(k)==false) {
@@ -30,13 +45,19 @@ public class Lauseke implements Komponentti{
     
     public boolean kerro(Komponentti k) {
         // (3-x)*7
-        if (k.onkoOsatekija()) {
-            return kerro((Osatekija) k);
+        if (k.onkoTermi()) {
+            boolean onnistuiko = true;
+            for (Komponentti kom : sisalto) {
+                if (kom.kerro(k)==false) {
+                    onnistuiko = false;
+                }
+            }
+            return onnistuiko;
         }
         // (3+x)*3/5        (3+x)*3*3 >> ((l * ot)t * ot)
         // ainoa vaihtoehto siis, että jo supistettu termi?
-        if (k.onkoTermi()) {
-            Termi t = (Termi) k;
+        if (k.onkoLaskutoimitus()) {
+            Laskutoimitus t = (Laskutoimitus) k;
             if (t.supista()) {
                 return kerro(t.getTulos());
             } else {
@@ -48,7 +69,7 @@ public class Lauseke implements Komponentti{
             Lauseke l = (Lauseke) k;
             boolean onnistuiko = true;
             for (Komponentti kom : sisalto) {
-                for (Komponentti kom2 : l.getLauseke()) {
+                for (Komponentti kom2 : l.getSisalto()) {
                     if (kom.kerro(kom2)==false) {
                         onnistuiko = false;
                     }
@@ -59,17 +80,34 @@ public class Lauseke implements Komponentti{
         return false;
     }
     
+    public boolean jaaNko(Komponentti k) {
+        
+        if (k.onkoTermi()) {
+            
+        }
+        
+        
+        return false;
+    }
+    
     public boolean jaa(Komponentti k) {
         // (3-x)/7
-        if (k.onkoOsatekija()) {
-            return jaa((Osatekija) k);
+        if (k.onkoTermi()) {
+            boolean onnistuiko = true;
+            for (Komponentti kom : sisalto) {
+                if (kom.jaa(k)==false) {
+                    onnistuiko = false;
+                }
+            }
+            return onnistuiko;
             // enta jos (3+x)/3x >> 1/x + 1/3
         }
-        // jo supistettu termi?
-        if (k.onkoTermi()) {
-            Termi t = (Termi) k;
-            if (t.supista()) {
-                return jaa(t.getTulos());
+        // jo supistettu laskutoimitus?
+        // (3-x)/5/8
+        if (k.onkoLaskutoimitus()) {
+            Laskutoimitus la = (Laskutoimitus) k;
+            if (la.supista()) {
+                return jaa(la.getTulos());
             } else {
                 return false;
             }
@@ -83,8 +121,8 @@ public class Lauseke implements Komponentti{
             Lauseke l = (Lauseke) k;
             boolean onnistuiko = true;
             for (Komponentti kom : sisalto) {
-                for (Komponentti kom2 : l.getLauseke()) {
-                    if (kom.kerro(kom2)==false) {
+                for (Komponentti kom2 : l.getSisalto()) {
+                    if (kom.jaa(kom2)==false) {
                         onnistuiko = false;
                     }
                 }
@@ -94,30 +132,85 @@ public class Lauseke implements Komponentti{
         return false;
     }
     
-    public boolean summaa(Osatekija ot) {
-        if (supistettu) {
-            //nyt lausekkeen pitaisi olla pelkka osatekija
-            
+    public boolean summaa(Komponentti k) {
+        if (k.onkoTermi()) {
+            return tulos.summaa(k);
+        } else if (k.onkoLaskutoimitus()) {
+            Laskutoimitus la = (Laskutoimitus) k;
+            return tulos.summaa(la.getTulos());
+        } else  {
+            Lauseke l = (Lauseke) k;
+            return tulos.summaa(l.getTulos());
+        }
+    }
+    
+    public boolean supista() {
+        boolean supistuiko = this.supistaSisalto();
+        if (supistuiko==true) {
+            this.summaaSisallonTermitYhteen();
+            if (sisalto.size()==1) {
+                Termi t = (Termi) sisalto.get(0);
+                tulos = t;
+                return true;
+            }
         }
         return false;
     }
     
-    public boolean supista() {
+    public boolean supistaSisalto() {
         boolean supistuiko = true;
-        for (Komponentti k : sisalto) {
+        for (int i = 0; i < sisalto.size(); i++) {
+            Komponentti k = sisalto.get(i);
             if (k.supista()==false) {
                 supistuiko = false;
+            } else {
+                if (k.onkoLaskutoimitus()) {
+                    Laskutoimitus la = (Laskutoimitus) k;
+                    sisalto.add(i, la.getTulos());
+                    sisalto.remove(i+1);
+                } else if (k.onkoLauseke()) {
+                    Lauseke l = (Lauseke) k;
+                    sisalto.add(i, l.getTulos());
+                    sisalto.remove(i+1);
+                }
             }
         }
-        supistettu = true;
         return supistuiko;
     }
     
-    public boolean onkoLausekeYksiKomponentti() {
-        return sisalto.size()==1;
+    public void summaaSisallonTermitYhteen() {
+        // hivenen epästabiili. kutsuu summaa()-metodia,
+        // joka toimii vain termeille/supistetuille
+        for (int i = 0; i < sisalto.size(); i++) {
+            Komponentti eka = sisalto.get(i);
+            if (eka.onkoTermi()) {
+                for (int j = 0; j < sisalto.size(); j++) {
+                    Komponentti toka = sisalto.get(j);
+                    if (i!=j && eka.onkoTermi() && eka.summaa(toka)) {
+                        sisalto.remove(j);
+                    }
+                }
+            }
+        }
     }
     
-    public Osatekija getTulos() {
+    public Termi muutaKomponenttiTermiksi(Komponentti k) {
+        Termi t = new Termi(0,0);
+        if (k.onkoLaskutoimitus()) {
+            Laskutoimitus la = (Laskutoimitus) k;
+            t = la.getTulos();
+        } else if (k.onkoLauseke()) {
+            Lauseke l = (Lauseke) k;
+            t = l.getTulos();
+        } else if (k.onkoTermi()) {
+            t = (Termi) k;
+        } else {
+            throw new RuntimeException("se olikin summa. hups");
+        }
+        return t;
+    }
+    
+    public Termi getTulos() {
         if (tulos == null) {
             System.out.println("syö paskaa, lauseke ei ole valmis");
         } else {
@@ -130,7 +223,7 @@ public class Lauseke implements Komponentti{
         return supistettu;
     }
     
-    public List<Komponentti> getLauseke() {
+    public List<Komponentti> getSisalto() {
         return sisalto;
     }
     
@@ -148,9 +241,9 @@ public class Lauseke implements Komponentti{
         }
     }
     
-    public boolean onkoOsatekija() { return false; }
-    
     public boolean onkoTermi() { return false; }
+    
+    public boolean onkoLaskutoimitus() { return false; }
     
     public boolean onkoLauseke() { return true; }
     
@@ -159,7 +252,7 @@ public class Lauseke implements Komponentti{
         for (int i = 0; i < sisalto.size(); i++) {
             Komponentti k = sisalto.get(i);
             tuloste += k.toString();
-            if ((k.onkoOsatekija() || k.onkoTermi()) && i != sisalto.size()-1) {
+            if ((k.onkoTermi() || k.onkoLaskutoimitus()) && i != sisalto.size()-1) {
                 tuloste += " ";
             }
         }

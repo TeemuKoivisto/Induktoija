@@ -39,22 +39,25 @@ public class Lukija {
         while (paikka<s.length()) {
             char c = lueMerkki();
             if ((c >= '0' && c <= '9')|| c == 'n' || c == 'x') {
-                Osatekija ot = lueOsatekijaLoppuun();
+                Termi t = lueTermiLoppuun();
                 if (nega) {
-                    ot.muutaNegatiiviseksi();
+                    t.muutaNegatiiviseksi();
                     nega = false;
                 }
-                lista.add(ot);
+                lista.add(t);
             } else if (c == '-') {
                 nega = true;
             } else if (c == '*' || c=='/' || c == '(') {
-                if (c == '(' && (lueMerkki(paikka-1)=='+' || lueMerkki(paikka-1)=='-' || lueMerkki(paikka-1)=='=')) {
+                if (c == '(' && (lista.isEmpty() || !lista.get(lista.size()-1).onkoLauseke())) {
                     Lauseke lause = lueLauseke();
                     lista.add(lause);
                 } else {
-                    Termi termi = new Termi(lista.get(lista.size()-1), c, lueTermiLoppuun(c));
+//                    if (c=='(') {
+//                        c='*';
+//                    }
+                    Laskutoimitus la = new Laskutoimitus(lista.get(lista.size()-1), c, lueLaskutoimitusLoppuun(c));
                     lista.remove(lista.size()-1);
-                    lista.add(termi);
+                    lista.add(la);
                 }
             } else if (c == '=' && merkki == '=') {
                 return lista;
@@ -62,6 +65,7 @@ public class Lukija {
                 return lista;
             } else if (c == '+') {
             } else if (c == 's' && lueMerkki() == 'i' && lueMerkki() == 'g') {
+                lueMerkki();
                 Summa summa = lueSummaLoppuun();
                 lista.add(summa);
             } else {
@@ -72,114 +76,43 @@ public class Lukija {
     }
     
     public Lauseke lueLauseke() {
-        Lauseke lauseke = new Lauseke();
-        List<Komponentti> lista = lauseke.getLauseke();
-        lista = lueMerkkiinAsti(')');
+        List<Komponentti> lista = lueMerkkiinAsti(')');
+        Lauseke lauseke = new Lauseke(lista);
         return lauseke;
     }
     
-    /*
-    public Yhtalo lue() {
-        List<Komponentti> lista = yhtalo.getVasenpuoli();
-        boolean nega = false;
-        while (paikka<s.length()) {
-            char c = lueMerkki();
-            if ((c >= '0' && c <= '9')|| c == 'n' || c == 'x') {
-                Osatekija ot = lueOsatekijaLoppuun();
-                if (nega) {
-                    ot.muutaNegatiiviseksi();
-                    nega = false;
-                }
-                lista.add(ot);
-            } else if (c == '-') {
-                nega = true;
-            } else if (c == '*' || c=='/' || c == '(') {
-                if (c == '(' && (lueMerkki(paikka-1)=='+' || lueMerkki(paikka-1)=='-' || lueMerkki(paikka-1)=='=')) {
-                    Lauseke lause = lueLausekeLoppuun();
-                    lista.add(lause);
-                } else {
-                    Termi termi = new Termi(lista.get(lista.size()-1), c, lueTermiLoppuun(c));
-                    lista.remove(lista.size()-1);
-                    lista.add(termi);
-                }
-            } else if (c == '=') {
-                lista = yhtalo.getOikeapuoli();
-            } else if (c == '+' ) {
-            } else {
-                System.out.println("paskaa syötit. hyi hyi.");
-            }
-        }
-        return yhtalo;
-    }
-    
-    public Lauseke lueLausekeLoppuun() {
-        Lauseke lauseke = new Lauseke();
-        List<Komponentti> lista = lauseke.getLauseke();
-        boolean nega = false;
-        while (paikka<s.length()) {
-            char c = lueMerkki();
-            if ((c >= '0' && c <= '9')|| c == 'n' || c == 'x') {
-                Osatekija ot = lueOsatekijaLoppuun();
-                if (nega) {
-                    ot.muutaNegatiiviseksi();
-                    nega = false;
-                }
-                lista.add(ot);
-            } else if (c == '-') {
-                nega = true;
-            } else if (c == '*' || c=='/' || c == '(') {
-                if (c == '(' && (lueMerkki(paikka-1)=='+' || lueMerkki(paikka-1)=='-' || lueMerkki(paikka-1)=='=')) {
-                    Lauseke lause = lueLausekeLoppuun();
-                    lista.add(lause);
-                } else {
-                    Termi termi = new Termi(lista.get(lista.size()-1), c, lueTermiLoppuun(c));
-                    lista.remove(lista.size()-1);
-                    lista.add(termi);
-                }
-            } else if (c == ')') {
-                return lauseke;
-            } else if (c == '+') {
-            } else {
-                System.out.println("paskaa syötit. hyi hyi.");
-            }
-        }
-        System.out.println("puuttuva )-sulku(!)");
-        return lauseke;
-    }*/
-    
-    // sig(n+1,i=3,n+3)
+    // sig(n,0,n+3)
     public Summa lueSummaLoppuun() {
-        List<Komponentti> lista = new ArrayList<>();
-        Osatekija ot = new Osatekija(0,0);
+        Termi ylaraja = new Termi(0, 0), alaraja = new Termi(0, 0);
         if (lueMerkki(paikka)=='(') {
             lueMerkki();
         }
-        while (s.charAt(paikka) != ',') {
-            Osatekija ott = lueOsatekijaLoppuun();
-            lista.add(ott);
+        ylaraja = lueTermiLoppuun();
+        lueMerkki();
+        if (lueMerkki(paikka)==',') {
+            lueMerkki();
         }
-        paikka++;
-        if (lueMerkki(paikka)=='i' && lueMerkki(paikka+1) == '=') {
-            paikka++;
-            paikka++;
-            ot = lueOsatekijaLoppuun();
-        }
-        Summa summa = new Summa(lista, (int) ot.getValue());
-        return summa;
+        alaraja = lueTermiLoppuun();
+        lueMerkki();
+        Lauseke lauseke = lueLauseke();
+        return new Summa(ylaraja, (int) alaraja.getValue(), lauseke);
     }
         
-    public Komponentti lueTermiLoppuun(char c) {
-        if (c == '(' || lueMerkki(paikka + 1) == '(') {
+    public Komponentti lueLaskutoimitusLoppuun(char c) {
+        if (c == '(') {
+            return lueLauseke();
+        } else if (lueMerkki(paikka + 1) == '(') {
+            // c=='/' || c=='*'
             lueMerkki();
             return lueLauseke();
         } else {
             lueMerkki();
-            return lueOsatekijaLoppuun();
+            return lueTermiLoppuun();
         }
         
     }
     
-    public Osatekija lueOsatekijaLoppuun() {
+    public Termi lueTermiLoppuun() {
         String arvo = "", muuttuja = "";
         char c = s.charAt(paikka);
         while ((c >= '0' && c <= '9') || c == '.') {
@@ -197,11 +130,11 @@ public class Lukija {
             paikka--;
         }
         if (arvo.isEmpty()) {
-            return new Osatekija(1, 1);
+            return new Termi(1, 1);
         } else if (muuttuja.isEmpty()) {
-            return new Osatekija(Double.parseDouble(arvo), 0);
+            return new Termi(Double.parseDouble(arvo), 0);
         } else {
-            return new Osatekija(Double.parseDouble(arvo), 1);
+            return new Termi(Double.parseDouble(arvo), 1);
         }
     }
     
