@@ -73,35 +73,35 @@ public class LaskinJunitTest {
     public void testaaTermienYhteenlasku() {
         Termi ot = new Termi(4, 0);
         ot.summaa(new Termi(2, 0));
-        assertEquals(6.0, ot.getValue(), 0);
+        assertEquals(6.0, ot.getArvo(), 0);
     }
     
     @Test
     public void testaaTermienKertolasku() {
         Termi ot = new Termi(4, 0);
         ot.kerro(new Termi(2, 0));
-        assertEquals(8.0, ot.getValue(), 0);
+        assertEquals(8.0, ot.getArvo(), 0);
     }
     
     @Test
     public void testaaTermienJakolasku() {
         Termi ot = new Termi(4, 0);
         ot.jaa(new Termi(2,0));
-        assertEquals(2.0, ot.getValue(), 0);
+        assertEquals(2.0, ot.getArvo(), 0);
     }
     
     @Test
     public void testaaKahdenTerminJaKahdenKertolaskunSupistus() {
         Laskutoimitus t = new Laskutoimitus(new Termi(3, 0), '*', new Termi(3, 0));
         t.supista();
-        assertEquals(9.0, t.getTulos().getValue(), 0);
+        assertEquals(9.0, t.getTulos().getArvo(), 0);
     }
     
     @Test
     public void testaaKahdestaTermistaKoostuvanJakolaskunSupistus() {
         Laskutoimitus t = new Laskutoimitus(new Termi(3, 0), '/', new Termi(3, 0));
         t.supista();
-        assertEquals(1.0, t.getTulos().getValue(), 0);
+        assertEquals(1.0, t.getTulos().getArvo(), 0);
     }
     
     @Test

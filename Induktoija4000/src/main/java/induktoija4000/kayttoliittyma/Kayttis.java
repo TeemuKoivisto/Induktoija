@@ -20,8 +20,8 @@ public class Kayttis {
             System.out.println("--------------");
 
             System.out.println("Abandon all yer hope who enter here.");
-            System.out.println("Anna lauseke esim. n+3=n-12");
-            System.out.println("Kayta muuttujana n:aa.");
+            System.out.println("Anna lauseke esim. n*3+19=n/n-12/8");
+            System.out.println("Käytä muuttujana n:ää.");
             
             String syote = lukija.nextLine();
             

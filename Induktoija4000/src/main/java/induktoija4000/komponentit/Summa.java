@@ -14,8 +14,21 @@ public class Summa implements Komponentti {
         summa = l;
     }
     
-    public void sijoitakja1() {
+    public Lauseke sijoitaMuuttujanTilalle(List<Termi> lista) {
+        Lauseke lauseke = new Lauseke();
+        return lauseke;
+    }
+    
+    public void sijoitakplus1() {
         // sijoita muuttujan tilalle k+1
+        for (int i = 0; i < summa.getSisalto().size(); i++) {
+            Komponentti k = summa.getSisalto().get(i);
+            // eihän tää vittu toimi
+            // jos vaik lauseke, jos monta muuttujaa?
+            if (k.sisaltaakoMuuttujan()) {
+                k.summaa(new Termi(1, 0));
+            }
+        }
     }
     
     @Override
@@ -49,6 +62,15 @@ public class Summa implements Komponentti {
     }
 
     @Override
+    public boolean sisaltaakoMuuttujan() {
+        return summa.sisaltaakoMuuttujan();
+    }
+    
+    public Komponentti kopioi() {
+        return new Summa(ylaraja, alaraja, summa);
+    }
+    
+    @Override
     public boolean onkoTermi() {
         return false;
     }
@@ -61,6 +83,15 @@ public class Summa implements Komponentti {
     @Override
     public boolean onkoLauseke() {
         return false;
+    }
+    
+    @Override
+    public boolean onkoSumma() {
+        return true;
+    }
+
+    public int getAlaraja() {
+        return alaraja;
     }
     
     public String toString() {

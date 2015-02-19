@@ -45,6 +45,7 @@ xxxxxxxxxxxxxx
 debugatut yhdistelmät:
 t*t + t/t + t*l + t/l + l*t + l/t + l*l + l/l + la*t + la/t + la*l + la/l
 6*6 + 6/6 + 6*(6+6) + 6/(6+6) + (6+6)*6 + (6+6)/6 + (6+6)(6+6) + (6+6)/(6+6) + 6*6*6 + 6/6/6 + 6*6*(6+6) + 6*6/(6+6) = n
+n=-979.666666666666
 
 onnistuneesti debugattuja lausekkeita:
 23x+234/34x=24x-24
@@ -52,20 +53,19 @@ onnistuneesti debugattuja lausekkeita:
 n + 1 +n+3 = n*9/3 + 5*n 2*4 + n
 (6+6)(6+6) + (6+6)/(6+6) = n
 (3+3)/(3+9) + 7*3n/4 + 5*6/n + 3n/6/7 = 234n
+(3+n)(3+n)=1
+(3+n)(3+n)=(n+3)(n+2)
+(n(n+1)) = (n(n+1)) + 1 + n
 
-vielä vaiheessa:
+työn alla:
 -n - 1 = (n(n+1))/2
+>> ongelma: laskutoimitus ei supistu komponenteiksi lausekkeen sisällä
+korjattu. vaikkakin pitää laskutoimitus fiksaa myöhemmin..
+
 (n+3)/(3+n) + 7*3n = 234n
 sig(n, 1, n+3) = n*9/3 + 5*n 2*4 + n
 23x+234/(34+1)=24x-24
 23x+234/(34x+1)=24x-24
-
-/ >> lueTermiLoppuun >> mutta ei huomioi (-sulkua
-
-234/(34x+1) >> mitä vittua >> summaa yhteeen >> jos ei onnaa
->> kaks uutta termiä
-eli >> 234/34x + 234/1
-
 
 xxxxxxxxxxxxxx
 

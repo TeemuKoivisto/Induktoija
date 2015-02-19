@@ -1,13 +1,19 @@
 package induktoija4000.komponentit;
 
+import java.util.List;
+
 public interface Komponentti {
+    public Komponentti kopioi();
     public boolean supista();
     public String palautaTyyppi();
-    public void muutaNegatiiviseksi();
+    public void muutaNegatiiviseksi(); // vaihdaEtumerkki()?
     public boolean summaa(Komponentti k);
     public boolean kerro(Komponentti k);
     public boolean jaa(Komponentti k);
     public boolean onkoTermi();
     public boolean onkoLaskutoimitus();
     public boolean onkoLauseke();
+    public boolean onkoSumma();
+    public boolean sisaltaakoMuuttujan();
+    public Lauseke sijoitaMuuttujanTilalle(List<Termi> lista);
 }

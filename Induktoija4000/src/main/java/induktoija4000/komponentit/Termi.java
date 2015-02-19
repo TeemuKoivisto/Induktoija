@@ -1,5 +1,8 @@
 package induktoija4000.komponentit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Termi implements Komponentti{
     
     private double arvo;
@@ -40,6 +43,36 @@ public class Termi implements Komponentti{
         return "t";
     }
     
+    public Lauseke sijoitaMuuttujanTilalle(List<Termi> lista) {
+        Lauseke lauseke = new Lauseke();
+        if (lista.size()>1) {
+            for (int i = 0; i < lista.size(); i++) {
+                List<Termi> pikkulista = new ArrayList<Termi>();
+                pikkulista.add(lista.get(i));
+                Termi t = (Termi) this.kopioi();
+                t.sijoitaMuuttujanTilalle(pikkulista);
+                lauseke.lisaa(t);
+            }
+        } else {
+            Termi t = lista.get(0);
+            // teen tämän joskus paremmin
+            // 3n^2 -> 5n = 3 * (5n * 5n)
+            if (t.sisaltaakoMuuttujan()) {
+                Termi tulos = (Termi) t.kopioi();
+                for (int i = 0; i < muuttuja; i++) {
+                    tulos.kerro(t);
+                }
+                tulos.kerro(new Termi(arvo, 0));
+                this.alusta(tulos.getArvo(), tulos.getMuuttuja());
+            } else {
+                // 3n^2 -> 5 = 3 * 5^2
+                arvo = arvo * Math.pow(t.getArvo(), muuttuja);
+            }
+            lauseke.lisaa(this);
+        }
+        return lauseke;
+    }
+    
     public Termi muutaKomponenttiTermiksi(Komponentti k) {
         Termi t = new Termi(0,0);
         if (k.onkoLaskutoimitus()) {
@@ -61,8 +94,11 @@ public class Termi implements Komponentti{
             return false;
         }
         Termi t = muutaKomponenttiTermiksi(k);
-        if (this.muuttuja==t.getVariable()) {
-            arvo += t.getValue();
+        if (this.muuttuja==t.getMuuttuja()) {
+            arvo += t.getArvo();
+            if (arvo==0) {
+                alusta(0, 0);
+            }
             return true;
         }
         return false;
@@ -91,27 +127,36 @@ public class Termi implements Komponentti{
     }
     
     public boolean jaa(Termi t) {
-        this.arvo /= t.getValue();
-        this.muuttuja -= t.getVariable();
+        this.arvo /= t.getArvo();
+        this.muuttuja -= t.getMuuttuja();
         return true;
     }
     
     public boolean kerro(Termi t) {
-        this.arvo *= t.getValue();
-        this.muuttuja += t.getVariable();
+        this.arvo *= t.getArvo();
+        this.muuttuja += t.getMuuttuja();
         return true;
+    }
+    
+    public boolean sisaltaakoMuuttujan() {
+        return variable!=0;
     }
     
     public Komponentti getEksponentti() {
         return eksponentti;
     }
     
-    public double getValue() {
+    public double getArvo() {
         return arvo;
     }
     
-    public double getVariable() {
+    public double getMuuttuja() {
         return muuttuja;
+    }
+    
+    public Komponentti kopioi() {
+        Termi t = new Termi(arvo, muuttuja);
+        return t;
     }
     
     public boolean onkoTermi() { return true; }
@@ -119,6 +164,8 @@ public class Termi implements Komponentti{
     public boolean onkoLaskutoimitus() { return false; }
     
     public boolean onkoLauseke() { return false; }
+    
+    public boolean onkoSumma() { return false; }
     
     public String toString() {
         if (muuttuja == 0) {

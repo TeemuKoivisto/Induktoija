@@ -14,16 +14,18 @@ public class Yhtalo {
         oikeapuoli = new ArrayList<Komponentti>();
     }
     
-    public boolean supistaKaikkiTermeiksi() {
-        if (supista(vasenpuoli) && supista(oikeapuoli)) {
-            this.muutaYhtaloTermeiksi();
+    public boolean supista() {
+        boolean vasen = supistaJosMahdollistaTermeiksi(vasenpuoli);
+        if (supistaJosMahdollistaTermeiksi(oikeapuoli) && vasen) {
+            this.supistaPuoletYhteenTermeina();
             return true;
         } else {
+            this.supistaPuoletYhteenKomponentteina();
             return false;
         }
     }
     
-    public boolean supista(List<Komponentti> lista) {
+    public boolean supistaJosMahdollistaTermeiksi(List<Komponentti> lista) {
         boolean supistuiko = true;
         for (int i = 0; i < lista.size(); i++) {
             Komponentti k = lista.get(i);
@@ -40,12 +42,41 @@ public class Yhtalo {
                     lista.remove(i+1);
                 }
             }
-            
         }
         return supistuiko;
     }
     
-    public void muutaYhtaloTermeiksi() {
+    public void supistaPuoletYhteenKomponentteina() {
+        // ehkä parempi siirtaa vain oikealle puolelle ja sitten käydä läpi
+        // säästyy hieman koodia
+        for (int i = 0; i < vasenpuoli.size(); i++) {
+            Komponentti k = vasenpuoli.get(i);
+            if (k.onkoLaskutoimitus()) {
+                Laskutoimitus la = (Laskutoimitus) k;
+                vasenpuoli.addAll(la.palautaTulosListana());
+                vasenpuoli.remove(i);
+            } else if (k.onkoLauseke()) {
+                Lauseke l = (Lauseke) k;
+                vasenpuoli.addAll(l.palautaTulosListana());
+                vasenpuoli.remove(i);
+            }
+        }
+        for (Komponentti k : oikeapuoli) {
+            k.muutaNegatiiviseksi();
+            if (k.onkoLaskutoimitus()) {
+                Laskutoimitus la = (Laskutoimitus) k;
+                vasenpuoli.addAll(la.palautaTulosListana());
+            } else if (k.onkoLauseke()) {
+                Lauseke l = (Lauseke) k;
+                vasenpuoli.addAll(l.palautaTulosListana());
+            } else {
+                vasenpuoli.add(k);
+            }
+        }
+        oikeapuoli = new ArrayList<Komponentti>();
+    }
+    
+    public void supistaPuoletYhteenTermeina() {
         termeina = new ArrayList<Termi>();
         for (Komponentti k : vasenpuoli) {
             termeina.add((Termi) k);
@@ -55,6 +86,13 @@ public class Yhtalo {
             termeina.add((Termi) k);
         }
     }
+    
+//    public void sijoitaMuuttujantilalle(List<Komponentti> lista) {
+//        for (int i = 0; i < arr.length; i++) {
+//            Object arr = arr[i];
+//            
+//        }
+//    }
     
     public void annaVasenPuoli(List<Komponentti> l) { vasenpuoli = l; }
     

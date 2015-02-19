@@ -14,18 +14,12 @@ import java.util.List;
  * @author Teemu
  */
 public class TermiComparator implements Comparator<Termi>{
-/*
-    private List<Osatekija> osatekijat;
-    
-    public TermiComparator(List<Osatekija> ot) {
-        osatekijat=ot;
-    }
-  */  
+
     @Override
     public int compare(Termi verrattava, Termi vertaaja) {
-        if (verrattava.getVariable() > vertaaja.getVariable()) {
+        if (verrattava.getMuuttuja() > vertaaja.getMuuttuja()) {
             return -1;
-        } else if (verrattava.getVariable() == vertaaja.getVariable()) {
+        } else if (verrattava.getMuuttuja() == vertaaja.getMuuttuja()) {
             return 0;
         } else {
             return 1;

@@ -48,8 +48,14 @@ public class Lukija {
             } else if (c == '-') {
                 nega = true;
             } else if (c == '*' || c=='/' || c == '(') {
-                if (c == '(' && (lista.isEmpty() || !lista.get(lista.size()-1).onkoLauseke())) {
+                char e = lueMerkki(paikka-1);
+//                boolean mitvit = (!(e >= '0' && e <= '9') && e != 'n' && e != 'x') && e!=')';
+                if (c == '(' && (lista.isEmpty() || (!(e >= '0' && e <= '9') && e != 'n' && e != 'x') && e!=')')) {
                     Lauseke lause = lueLauseke();
+                    if (nega) {
+                        lause.muutaNegatiiviseksi();
+                        nega = false;
+                    }
                     lista.add(lause);
                 } else {
 //                    if (c=='(') {
@@ -95,7 +101,7 @@ public class Lukija {
         alaraja = lueTermiLoppuun();
         lueMerkki();
         Lauseke lauseke = lueLauseke();
-        return new Summa(ylaraja, (int) alaraja.getValue(), lauseke);
+        return new Summa(ylaraja, (int) alaraja.getArvo(), lauseke);
     }
         
     public Komponentti lueLaskutoimitusLoppuun(char c) {
@@ -109,7 +115,6 @@ public class Lukija {
             lueMerkki();
             return lueTermiLoppuun();
         }
-        
     }
     
     public Termi lueTermiLoppuun() {
