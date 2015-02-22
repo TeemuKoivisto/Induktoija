@@ -6,7 +6,6 @@ import java.util.List;
 public class Lauseke implements Komponentti{
 
     private List<Komponentti> sisalto;
-    private Termi tulos;
     private boolean supistettu;
     
     public Lauseke() {
@@ -45,10 +44,10 @@ public class Lauseke implements Komponentti{
         return onnistuiko;
     }
     
-    public boolean kerro(Termi ot) {
+    public boolean kerro(Termi t) {
         boolean onnistuiko = true;
         for (Komponentti k : sisalto) {
-            if (k.kerro(k)==false) {
+            if (k.kerro(t)==false) {
                 onnistuiko = false;
             }
         }
@@ -70,12 +69,8 @@ public class Lauseke implements Komponentti{
         // (3+x)*3/5        (3+x)*3*3 >> ((l * ot)t * ot)
         // ainoa vaihtoehto siis, että jo supistettu termi?
         if (k.onkoLaskutoimitus()) {
-            Laskutoimitus t = (Laskutoimitus) k;
-            if (t.supista()) {
-                return kerro(t.getTulos());
-            } else {
-                return false;
-            }
+            Lauseke kertoja = new Lauseke(k.palautaTulosListana());
+            return this.kerro(kertoja);
         }
         // (3+x)(3+x)
         if (k.onkoLauseke()) {
@@ -98,16 +93,6 @@ public class Lauseke implements Komponentti{
         return false;
     }
     
-    public boolean jaaNko(Komponentti k) {
-        
-        if (k.onkoTermi()) {
-            
-        }
-        
-        
-        return false;
-    }
-    
     public boolean jaa(Komponentti k) {
         //this.supista();
         // (3-x)/7
@@ -121,15 +106,15 @@ public class Lauseke implements Komponentti{
             return onnistuiko;
             // enta jos (3+x)/3x >> 1/x + 1/3
         }
-        // jo supistettu laskutoimitus?
-        // (3-x)/5/8
+        // (3-x)/(2/(x+8)) >> l / l >> getSisalto >> l / la 
+        // wolframin mukaan >> 1/2((3-x)(x+8)) = 1
         if (k.onkoLaskutoimitus()) {
             Laskutoimitus la = (Laskutoimitus) k;
-            if (la.supista()) {
-                return jaa(la.getTulos());
-            } else {
-                return false;
-            }
+            Komponentti kertoja = new Termi(1, 0);
+            boolean onnistuiko = kertoja.jaa(la.getEkatekija()); //aika varmasti ei toimi... kenties jos kertoja on lauseke?
+            this.kerro(la.getTokatekija());
+            this.kerro(kertoja);
+            return onnistuiko;
         }
         // (3+x)/(3+x)
         // 3/(3+x) + x/(3+x)
@@ -149,24 +134,16 @@ public class Lauseke implements Komponentti{
     }
     
     public boolean summaa(Komponentti k) {
-        if (k.onkoTermi()) {
-            return tulos.summaa(k);
-        } else if (k.onkoLaskutoimitus()) {
-            Laskutoimitus la = (Laskutoimitus) k;
-            return tulos.summaa(la.getTulos());
-        } else  {
-            Lauseke l = (Lauseke) k;
-            return tulos.summaa(l.getTulos());
-        }
+        sisalto.addAll(k.palautaTulosListana());
+        return true;
     }
     
     public boolean supista() {
         boolean supistuiko = this.supistaSisalto();
+        supistettu = true;
         if (supistuiko==true) {
             this.summaaSisallonTermitYhteen();
             if (sisalto.size()==1) {
-                Termi t = (Termi) sisalto.get(0);
-                tulos = t;
                 return true;
             }
         }
@@ -178,16 +155,21 @@ public class Lauseke implements Komponentti{
         for (int i = 0; i < sisalto.size(); i++) {
             Komponentti k = sisalto.get(i);
             if (k.supista()==false) {
+                // lisää sisällön perään, joten supistamattomat laskutoimitukset jumittavat viimeisiksi
+                List<Komponentti> lista = k.palautaTulosListana();
+                sisalto.remove(i);
+                sisalto.addAll(lista);
                 supistuiko = false;
             } else {
-                // la.palautaTulos??
+                // kenties voisin käyttää palautaTulosListana ja getata Termi mutta saattaa olla
+                // epästabiilimpaa. Mene ja tiedä.
                 if (k.onkoLaskutoimitus()) {
                     Laskutoimitus la = (Laskutoimitus) k;
-                    sisalto.add(i, la.getTulos());
+                    sisalto.add(i, la.palautaTulos());
                     sisalto.remove(i+1);
                 } else if (k.onkoLauseke()) {
                     Lauseke l = (Lauseke) k;
-                    sisalto.add(i, l.getTulos());
+                    sisalto.add(i, l.palautaTulos());
                     sisalto.remove(i+1);
                 }
             }
@@ -211,29 +193,27 @@ public class Lauseke implements Komponentti{
         }
     }
     
-    public Termi muutaKomponenttiTermiksi(Komponentti k) {
-        Termi t = new Termi(0,0);
-        if (k.onkoLaskutoimitus()) {
-            Laskutoimitus la = (Laskutoimitus) k;
-            t = la.getTulos();
-        } else if (k.onkoLauseke()) {
-            Lauseke l = (Lauseke) k;
-            t = l.getTulos();
-        } else if (k.onkoTermi()) {
-            t = (Termi) k;
-        } else {
-            throw new RuntimeException("se olikin summa. hups");
+    public List<Komponentti> palautaTulosListana() {
+        List<Komponentti> lista = new ArrayList<>();
+        for (int i = 0; i < sisalto.size(); i++) {
+            lista.addAll(sisalto.get(i).palautaTulosListana());
         }
-        return t;
+        return lista;
     }
     
-    public Termi getTulos() {
-        if (tulos == null) {
-            System.out.println("syö paskaa, lauseke ei ole valmis");
+    public Termi palautaTulos() {
+        Komponentti tulos = sisalto.get(0);
+        if (tulos.onkoLaskutoimitus()) {
+            Laskutoimitus la = (Laskutoimitus) tulos;
+            return la.palautaTulos();
+        } else if (tulos.onkoLauseke()) {
+            Lauseke l = (Lauseke) tulos;
+            return l.palautaTulos();
+        } else if (tulos.onkoTermi()) {
+            return (Termi) tulos;
         } else {
-            return tulos;
+            throw new RuntimeException("Lausekkeen palautaTuloksessa olikin Summa");
         }
-        throw new NullPointerException("lausekkeen getTulos");
     }
     
     public boolean sisaltaakoMuuttujan() {
@@ -257,23 +237,6 @@ public class Lauseke implements Komponentti{
         Lauseke l = new Lauseke(sisalto);
         l.supista();
         return l;
-    }
-    
-    public List<Komponentti> palautaTulosListana() {
-        List<Komponentti> lista = new ArrayList<Komponentti>();
-        for (int i = 0; i < sisalto.size(); i++) {
-            Komponentti k = sisalto.get(i);
-            if (k.onkoLaskutoimitus()) {
-                Laskutoimitus la = (Laskutoimitus) k;
-                lista.addAll(la.palautaTulosListana());
-            } else if (k.onkoLauseke()) {
-                Lauseke l = (Lauseke) k;
-                lista.addAll(l.palautaTulosListana());
-            } else {
-                lista.add(k);
-            }
-        }
-        return lista;
     }
     
     public List<Komponentti> getSisalto() {

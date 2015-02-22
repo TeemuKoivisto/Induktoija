@@ -5,6 +5,7 @@ import java.util.List;
 public interface Komponentti {
     public Komponentti kopioi();
     public boolean supista();
+    public List<Komponentti> palautaTulosListana();
     public String palautaTyyppi();
     public void muutaNegatiiviseksi(); // vaihdaEtumerkki()?
     public boolean summaa(Komponentti k);

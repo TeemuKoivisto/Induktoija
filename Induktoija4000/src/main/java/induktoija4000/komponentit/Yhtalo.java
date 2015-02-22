@@ -26,19 +26,26 @@ public class Yhtalo {
     }
     
     public boolean supistaJosMahdollistaTermeiksi(List<Komponentti> lista) {
+        // identtinen Lausekkeen metodiin supistaSisalto()
         boolean supistuiko = true;
         for (int i = 0; i < lista.size(); i++) {
             Komponentti k = lista.get(i);
             if (k.supista()==false) {
+                // lisää sisällön perään, joten supistamattomat laskutoimitukset jumittavat viimeisiksi
+                List<Komponentti> tulos = k.palautaTulosListana();
+                lista.remove(i);
+                lista.addAll(tulos);
                 supistuiko = false;
             } else {
+                // kenties voisin käyttää palautaTulosListana ja getata Termi mutta saattaa olla
+                // epästabiilimpaa. Mene ja tiedä.
                 if (k.onkoLaskutoimitus()) {
                     Laskutoimitus la = (Laskutoimitus) k;
-                    lista.add(i, la.getTulos());
+                    lista.add(i, la.palautaTulos());
                     lista.remove(i+1);
                 } else if (k.onkoLauseke()) {
                     Lauseke l = (Lauseke) k;
-                    lista.add(i, l.getTulos());
+                    lista.add(i, l.palautaTulos());
                     lista.remove(i+1);
                 }
             }

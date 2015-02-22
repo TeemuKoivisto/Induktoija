@@ -1,3 +1,5 @@
+package induktoija4000.laskin;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -18,13 +20,13 @@ import static org.junit.Assert.*;
  *
  * @author Teemu
  */
-public class LaskinJunitTest {
+public class LaskinTest {
     
     private Laskin laskin;
     private Lukija lukija;
     private Yhtalo yhtalo;
     
-    public LaskinJunitTest() {
+    public LaskinTest() {
     }
     
     @BeforeClass
@@ -94,28 +96,28 @@ public class LaskinJunitTest {
     public void testaaKahdenTerminJaKahdenKertolaskunSupistus() {
         Laskutoimitus t = new Laskutoimitus(new Termi(3, 0), '*', new Termi(3, 0));
         t.supista();
-        assertEquals(9.0, t.getTulos().getArvo(), 0);
+        assertEquals(9.0, t.palautaTulos().getArvo(), 0);
     }
     
     @Test
     public void testaaKahdestaTermistaKoostuvanJakolaskunSupistus() {
         Laskutoimitus t = new Laskutoimitus(new Termi(3, 0), '/', new Termi(3, 0));
         t.supista();
-        assertEquals(1.0, t.getTulos().getArvo(), 0);
+        assertEquals(1.0, t.palautaTulos().getArvo(), 0);
     }
     
     @Test
     public void testaaYhtalonTermienSupistus() {
         lukija.annaSyote("6/3=x*4");
         yhtalo = lukija.lueKaikki();
-        assertTrue(yhtalo.supistaKaikkiTermeiksi());
+        assertTrue(yhtalo.supista());
     }
     
     @Test
     public void testaaLaskimenYhtalonYhteenlasku() {
         lukija.annaSyote("6/3+3=x*4-x");
         yhtalo = lukija.lueKaikki();
-        yhtalo.supistaKaikkiTermeiksi();
+        yhtalo.supista();
         laskin.annaYhtalo(yhtalo);
         laskin.laskeYhteenKaikkiTermeina();
         assertTrue(laskin.getYhtalo().toString().equals("5.0 -3.0n = 0"));

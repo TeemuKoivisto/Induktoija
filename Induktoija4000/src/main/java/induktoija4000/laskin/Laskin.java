@@ -68,6 +68,8 @@ public class Laskin {
     
     public void laskeInduktioAskel(Summa summa) {
         int alku = summa.getAlaraja();
+        Termi arvo = new Termi(alku, 0);
+        List<Komponentti> oikea = yhtalo.getOikeapuoli();
         
     }
     
@@ -122,6 +124,8 @@ public class Laskin {
             this.ratkaiseKahdenTerminYhtalo();
         } else if (termit.size()==3) {
             this.ratkaiseKolmenTerminYhtalo();
+        } else if (termit.size()==0) {
+            System.out.println("\tn= 0");
         } else {
             System.out.println("vituix men ratkaiseYhtalo()");
             System.out.println("termejä joko 1 tai >3");
@@ -129,6 +133,8 @@ public class Laskin {
     }
     
     public void ratkaiseKahdenTerminYhtalo() {
+        // pitää ottaa huomioon, jos kaikki muuttujia niin
+        // r1 = 0
         List<Termi> termit = yhtalo.getTermit();
         double pieninMuuttuja = termit.get(1).getMuuttuja();
         if (pieninMuuttuja<0) {

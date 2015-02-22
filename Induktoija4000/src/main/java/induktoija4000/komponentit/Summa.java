@@ -97,4 +97,9 @@ public class Summa implements Komponentti {
     public String toString() {
         return "sig(" + ylaraja.toString() + ",i=" + alaraja + "," + summa.toString() + ")";
     }
+
+    @Override
+    public List<Komponentti> palautaTulosListana() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

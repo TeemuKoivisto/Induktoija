@@ -37,3 +37,17 @@ toiminallisuuden toteutus jääköön myöhempään ajankohtaan.
 (3+n)(3+n)=(n+3)(n+2) -yhtälöt ovat nyt ratkaistavissa. Laskin-luokkaan luotiin uusi
 toiminnallisuus yhtälöitä varten, jotka eivät supistu suoraan termeiksi.
 (n(n+1)) -lausekkeet supistuvat nyt oikein.
+
+21.2 - 27.2
+21.2 2.5h - Poistin turhan tulos-muuttujan Laskutoimituksesta ja Lausekkeesta sekä
+paransin supista()-metodin toiminnallisuutta. Nyt ohjelma ei enää sekoile getTuloksen
+kanssa tai turhaan muuta komponentteja termeiksi.
+Pieniä ongelmia Lukija-luokan kanssa mutta nyt kun supista()-metodi toimii huomattavasti
+paremmin korjaaminen on suht koht helppoa. Lisäsin siis myös palautaTulosListana-metodin
+Komponentti rajapinnalle, jonka kaikki komponentit nyt toteuttavat. Nyt lausekkeet,
+joita ei onnistuta supistamaan yhteen termiin oksentavat koko sisältönsä eteenpäin kuten
+myös Laskutoimitukset.
+Sain myös pit-raportit viimein toimimaan. Kenties teen lisää testejä.
+
+22.2 2h - Poistin viimeisetkin rippeet typerästä getTulos-metodista ja tulos-muuttujasta.
+Koodi toimii nyt paljon smoothimmin ja sillä saatta nyt jopa pystyä laskemaan induktioita.
