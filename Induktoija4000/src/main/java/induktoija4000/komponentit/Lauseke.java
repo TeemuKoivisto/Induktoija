@@ -110,11 +110,11 @@ public class Lauseke implements Komponentti{
         // wolframin mukaan >> 1/2((3-x)(x+8)) = 1
         if (k.onkoLaskutoimitus()) {
             Laskutoimitus la = (Laskutoimitus) k;
-            Komponentti kertoja = new Termi(1, 0);
-            boolean onnistuiko = kertoja.jaa(la.getEkatekija()); //aika varmasti ei toimi... kenties jos kertoja on lauseke?
+            Laskutoimitus kertoja = new Laskutoimitus(new Termi(1, 0), '/', la.getEkatekija());
+            kertoja.supista(); // jos kertoja onkin lauseke niin nyt ei 1/(x+1) hajota kaikkea
             this.kerro(la.getTokatekija());
             this.kerro(kertoja);
-            return onnistuiko;
+            return true;
         }
         // (3+x)/(3+x)
         // 3/(3+x) + x/(3+x)
@@ -141,13 +141,15 @@ public class Lauseke implements Komponentti{
     public boolean supista() {
         boolean supistuiko = this.supistaSisalto();
         supistettu = true;
-        if (supistuiko==true) {
-            this.summaaSisallonTermitYhteen();
-            if (sisalto.size()==1) {
-                return true;
-            }
-        }
-        return false;
+        this.uusisummaaSisallonTermitYhteen();
+        return sisalto.size()==1;
+//        if (supistuiko==true) {
+//            this.uusisummaaSisallonTermitYhteen();
+//            if (sisalto.size()==1) {
+//                return true;
+//            }
+//        }
+//        return false;
     }
     
     public boolean supistaSisalto() {
@@ -177,9 +179,19 @@ public class Lauseke implements Komponentti{
         return supistuiko;
     }
     
+    public void uusisummaaSisallonTermitYhteen() {
+        for (int i = 0; i < sisalto.size(); i++) {
+            Komponentti eka = sisalto.get(i);
+            for (int j = 0; j < sisalto.size(); j++) {
+                Komponentti toka = sisalto.get(j);
+                if (i!=j && eka.summaa(toka)) {
+                    sisalto.remove(j);
+                }
+            }
+        }
+    }
+    
     public void summaaSisallonTermitYhteen() {
-        // hivenen epästabiili. kutsuu summaa()-metodia,
-        // joka toimii vain termeille/supistetuille
         for (int i = 0; i < sisalto.size(); i++) {
             Komponentti eka = sisalto.get(i);
             if (eka.onkoTermi()) {

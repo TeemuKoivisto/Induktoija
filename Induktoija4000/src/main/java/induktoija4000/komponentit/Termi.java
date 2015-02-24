@@ -51,6 +51,9 @@ public class Termi implements Komponentti{
     
     public Lauseke sijoitaMuuttujanTilalle(List<Termi> lista) {
         Lauseke lauseke = new Lauseke();
+        if (muuttuja==0) {
+            return lauseke;
+        }
         if (lista.size()>1) {
             // 3n -> k+1 = 3*k + 3*1 
             for (int i = 0; i < lista.size(); i++) {
@@ -66,7 +69,7 @@ public class Termi implements Komponentti{
             // 3n^2 -> 5n = 3 * (5n * 5n)
             if (t.sisaltaakoMuuttujan()) {
                 Termi tulos = (Termi) t.kopioi();
-                for (int i = 0; i < muuttuja; i++) {
+                for (int i = 1; i < muuttuja; i++) {
                     tulos.kerro(t);
                 }
                 tulos.kerro(new Termi(arvo, 0));
@@ -74,6 +77,7 @@ public class Termi implements Komponentti{
             } else {
                 // 3n^2 -> 5 = 3 * 5^2
                 arvo = arvo * Math.pow(t.getArvo(), muuttuja);
+                muuttuja = 0;
             }
             lauseke.lisaa(this);
         }
@@ -143,7 +147,8 @@ public class Termi implements Komponentti{
     }
     
     public boolean sisaltaakoMuuttujan() {
-        return variable!=0;
+        boolean onko = muuttuja!=0;
+        return onko;
     }
     
     public Komponentti getEksponentti() {

@@ -57,13 +57,9 @@ n + 1 +n+3 = n*9/3 + 5*n 2*4 + n
 (3+n)(3+n)=(n+3)(n+2)
 (n(n+1)) = (n(n+1)) + 1 + n
 
--n - 1 = (n(n+1))/2
->> ongelma: laskutoimitus ei supistu komponenteiksi lausekkeen sisällä
-korjattu. vaikkakin pitää laskutoimitus fiksaa myöhemmin..
-
 työn alla:
 (0(0+1))/2 = 0
-((n+1)((n+1)+1)/2 = n + 1
+((n+1)((n+1)+1))/2 = n + 1
 ((n + 1)((n + 1) + 1))/2 = n + 1
 
 (n+3)/(3+n) + 7*3n = 234n

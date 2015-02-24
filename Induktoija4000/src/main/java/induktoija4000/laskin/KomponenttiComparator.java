@@ -30,8 +30,9 @@ public class KomponenttiComparator implements Comparator<Komponentti>{
             return 0;
         } else if (!verrattava.sisaltaakoMuuttujan() && vertaaja.sisaltaakoMuuttujan()) {
             return 1;
+        } else {
+            return 0;
         }
-        throw new RuntimeException("vitun komponentticomparator meni segasin");
     }
     
 }

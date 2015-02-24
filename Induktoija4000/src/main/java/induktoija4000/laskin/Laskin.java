@@ -30,6 +30,9 @@ public class Laskin {
         System.out.println(yhtalo);
         yhtalo.tulostaTyypit();
         
+        induktoi();
+        System.out.println(yhtalo);
+        
         System.out.println("\nsupistetaan...");
         boolean induktoinko = yhtalo.supista();
         System.out.println(yhtalo);
@@ -40,6 +43,9 @@ public class Laskin {
             this.laskeYhteenKaikkiTermeina();
         } else {
             System.out.println("SUPRISE INDUKTIO");
+//            this.induktoi();
+            System.out.println("oooh");
+            yhtalo.supista();
             this.laskeYhteenKaikkiKomponentteina();
             System.out.println(yhtalo);
             System.out.println("\njarjestetaan kaikki...");
@@ -60,17 +66,42 @@ public class Laskin {
     }
     
     public void induktoi() {
-        // laskeInduktioAskel(Summa summa)
+        Summa summa = new Summa(new Termi(1,1), new Termi(0,0), new Lauseke());
+//        laskeInduktioAskel(summa);
+        this.laskekplus1();
         // pura eri komponenteista koostuva yhtalo osiin
         // jotka sitten kerrot/jaat tarpeen mukaan
         // kunnes jäljellä on pelkkä kaunis ratkaisu
     }
     
     public void laskeInduktioAskel(Summa summa) {
-        int alku = summa.getAlaraja();
-        Termi arvo = new Termi(alku, 0);
-        List<Komponentti> oikea = yhtalo.getOikeapuoli();
-        
+        List<Termi> sijoitus = new ArrayList<>();
+        sijoitus.add(summa.getAlaraja());
+        List<Komponentti> oikea = yhtalo.getVasenpuoli();
+        System.out.println("lasketaan induktioaskel arvolla " + summa.getAlaraja().getArvo());
+        System.out.println(oikea);
+        for (int i = 0; i < oikea.size(); i++) {
+            Komponentti k = oikea.get(i);
+            k.sijoitaMuuttujanTilalle(sijoitus);
+        }
+        System.out.println(oikea);
+    }
+    
+    public void laskekplus1() {
+        List<Komponentti> vasen = yhtalo.getVasenpuoli();
+        List<Termi> sijoitus = new ArrayList<>();
+        sijoitus.add(new Termi(1, 1));
+        sijoitus.add(new Termi(1, 0));
+        System.out.println("lasketaan k + 1");
+        System.out.println(vasen);
+        for (int i = 0; i < vasen.size(); i++) {
+            Lauseke tulos = vasen.get(i).sijoitaMuuttujanTilalle(sijoitus);
+            if (!tulos.getSisalto().isEmpty()) {
+                vasen.add(i, tulos);
+                vasen.remove(i+1);
+            }
+        }
+        System.out.println(vasen);
     }
     
     public void laskeYhteenKaikkiKomponentteina() {
@@ -80,16 +111,15 @@ public class Laskin {
                 Komponentti toka = yhtalo.getVasenpuoli().get(j);
                 if (i!=j && eka.summaa(toka)) {
                     yhtalo.getVasenpuoli().remove(j);
+                    j--;
                 }
             }
-        }
-        // poistetaan tyhjät termit
-        for (int i = 0; i < yhtalo.getVasenpuoli().size(); i++) {
-            Komponentti eka = yhtalo.getVasenpuoli().get(i);
+            // poistetaan tyhjät
             if (eka.onkoTermi()) {
                 Termi t = (Termi) eka;
                 if (t.getArvo()==0) {
                     yhtalo.getVasenpuoli().remove(i);
+                    i--;
                 }
             }
         }
@@ -120,20 +150,20 @@ public class Laskin {
     
     public void ratkaiseTermeistaKoostuvaYhtalo() {
         List<Termi> termit = yhtalo.getTermit();
-        if (termit.size()==2) {
+        if (termit.size()==0 || termit.size()==1) {
+            System.out.println("\tn= 0");
+        } else if (termit.size()==2) {
             this.ratkaiseKahdenTerminYhtalo();
         } else if (termit.size()==3) {
             this.ratkaiseKolmenTerminYhtalo();
-        } else if (termit.size()==0) {
-            System.out.println("\tn= 0");
         } else {
             System.out.println("vituix men ratkaiseYhtalo()");
-            System.out.println("termejä joko 1 tai >3");
+            System.out.println("termejä >3");
         }
     }
     
     public void ratkaiseKahdenTerminYhtalo() {
-        // pitää ottaa huomioon, jos kaikki muuttujia niin
+        // pitää ottaa huomioon jos kaikki muuttujia niin
         // r1 = 0
         List<Termi> termit = yhtalo.getTermit();
         double pieninMuuttuja = termit.get(1).getMuuttuja();
@@ -240,8 +270,6 @@ public class Laskin {
     
     public void jarjestaTermit() {
         Collections.sort(yhtalo.getTermit(), new TermiComparator());
-        // lisää tähän mahdollinen suurimman muuttujan arvolla jako?
-        // nyt jakolasku tapahtuu kahdesti molemmissi ratkaiseYhtalOsatekijoilla -metodeissa
     }
     
     public Yhtalo getYhtalo() {

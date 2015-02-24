@@ -101,7 +101,7 @@ public class Lukija {
         alaraja = lueTermiLoppuun();
         lueMerkki();
         Lauseke lauseke = lueLauseke();
-        return new Summa(ylaraja, (int) alaraja.getArvo(), lauseke);
+        return new Summa(ylaraja, alaraja, lauseke);
     }
         
     public Komponentti lueLaskutoimitusLoppuun(char c) {

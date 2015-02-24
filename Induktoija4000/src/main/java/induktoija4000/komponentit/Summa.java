@@ -5,17 +5,18 @@ import java.util.List;
 public class Summa implements Komponentti {
     
     private Termi ylaraja;
-    private int alaraja;
+    private Termi alaraja;
     private Lauseke summa;
     
-    public Summa(Termi m, int i, Lauseke l) {
+    public Summa(Termi m, Termi a, Lauseke l) {
         ylaraja = m;
-        alaraja = i;
+        alaraja = a;
         summa = l;
     }
     
     public Lauseke sijoitaMuuttujanTilalle(List<Termi> lista) {
         Lauseke lauseke = new Lauseke();
+        summa.sijoitaMuuttujanTilalle(lista);
         return lauseke;
     }
     
@@ -53,12 +54,12 @@ public class Summa implements Komponentti {
 
     @Override
     public boolean kerro(Komponentti k) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return summa.kerro(k);
     }
 
     @Override
     public boolean jaa(Komponentti k) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return summa.jaa(k);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class Summa implements Komponentti {
         return true;
     }
 
-    public int getAlaraja() {
+    public Termi getAlaraja() {
         return alaraja;
     }
     
@@ -100,6 +101,6 @@ public class Summa implements Komponentti {
 
     @Override
     public List<Komponentti> palautaTulosListana() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return summa.palautaTulosListana();
     }
 }

@@ -38,10 +38,19 @@ public class Laskutoimitus implements Komponentti {
         }
         // tyyppi=='/' && !toka == x/(x+1) tai vastaavaa...
         if (tyyppi=='/') {
-            jaettu = ekaTekija.jaa(tokaTekija);
+            Komponentti jakaja = tokaTekija.palautaTulosListana().get(0);
+            if (ekaTekija.onkoTermi() && jakaja.onkoLaskutoimitus()) {
+                Termi ekaT = (Termi) ekaTekija;
+                Laskutoimitus la = (Laskutoimitus) jakaja;
+                tokaTekija = la.getEkatekija().kopioi();
+                ekaTekija = la.getTokatekija();
+                ekaTekija.kerro(ekaT);
+            } else {
+                jaettu = ekaTekija.jaa(tokaTekija);
+            }
         } else {
             // tarkistetaan kerrotaanko Termia Lausekkeella. Koska se ei ole kivaa...
-            if (ekaTekija.onkoTermi() && tokaTekija.onkoLauseke()) {
+            if (ekaTekija.onkoTermi() && (tokaTekija.onkoLauseke())) { // || ekaTekija.onkoLaskutoimitus())
                 Komponentti ekaT = ekaTekija;
                 ekaTekija = tokaTekija;
                 tokaTekija = ekaT;
@@ -97,6 +106,7 @@ public class Laskutoimitus implements Komponentti {
         // 6*6*6
         // periaatteessa ei koskaan. kenties jos supistettu laskutoimitus.
         // 6*6*(6+x)
+        // 6*(n/(1+n))
     }
 
     public boolean jaa(Komponentti k) {

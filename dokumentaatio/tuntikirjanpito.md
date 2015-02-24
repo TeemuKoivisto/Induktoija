@@ -49,5 +49,10 @@ joita ei onnistuta supistamaan yhteen termiin oksentavat koko sisältönsä eteenpä
 myös Laskutoimitukset.
 Sain myös pit-raportit viimein toimimaan. Kenties teen lisää testejä.
 
-22.2 2h - Poistin viimeisetkin rippeet typerästä getTulos-metodista ja tulos-muuttujasta.
+22.2 5h - Poistin viimeisetkin rippeet typerästä getTulos-metodista ja tulos-muuttujasta.
 Koodi toimii nyt paljon smoothimmin ja sillä saatta nyt jopa pystyä laskemaan induktioita.
+Piirsin myös luokkakaavion ja aloitin testejen tekemisen.
+
+23.2 1.5h - Parantelin sijoitaMuuttujanTilalle-metodin toiminallisuutta, joka nyt osaa
+sijoittaa muuttujan tilalle n+1 kuten induktio-oletuksessa halutaan. Enää tarvitaan vain
+kunnollinen metodi, joka tuottaa induktio-väittämän ja vertaa ovatko puolet identtiset.
