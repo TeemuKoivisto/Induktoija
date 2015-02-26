@@ -2,6 +2,7 @@ package induktoija4000.main;
 
 import induktoija4000.kayttoliittyma.Kayttis;
 import induktoija4000.komponentit.*;
+import java.util.Scanner;
 
 public class App {
 
@@ -10,7 +11,7 @@ public class App {
         Kayttis ohjelma = new Kayttis();
         ohjelma.kaynnista();
     }
-
+    
     public static void testaamista() {
         Lauseke lauseke = new Lauseke();
         Termi muuttuja = new Termi(1, 1);
@@ -21,6 +22,6 @@ public class App {
         la.supista();
         // (n^2+2n+1)
         Lauseke vastaus = (Lauseke) la.getEkatekija();
-//        assertTrue(vastaus.toString().equals("(n^2.0 + 2.0n + 1.0)"));
+//        assertTrue(vastaus.toString().onkoSamanArvoinen("(n^2.0 + 2.0n + 1.0)"));
     }
 }

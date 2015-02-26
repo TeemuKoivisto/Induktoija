@@ -28,7 +28,7 @@ public class Lukija {
     public Yhtalo lueKaikki() {
         List<Komponentti> lista = lueMerkkiinAsti('=');
         yhtalo.annaVasenPuoli(lista);
-        lista = lueMerkkiinAsti('Å');
+        lista = lueMerkkiinAsti('Ã');
         yhtalo.annaOikeaPuoli(lista);
         return yhtalo;
     }
@@ -75,7 +75,7 @@ public class Lukija {
                 Summa summa = lueSummaLoppuun();
                 lista.add(summa);
             } else {
-                System.out.println("paskaa syötit. hyi hyi.");
+                System.out.println("paskaa syÃ¶tit. hyi hyi.");
             }
         }
         return lista;

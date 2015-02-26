@@ -16,5 +16,6 @@ public interface Komponentti {
     public boolean onkoLauseke();
     public boolean onkoSumma();
     public boolean sisaltaakoMuuttujan();
+    public boolean onkoSamanArvoinen(Komponentti k);
     public Lauseke sijoitaMuuttujanTilalle(List<Termi> lista);
 }

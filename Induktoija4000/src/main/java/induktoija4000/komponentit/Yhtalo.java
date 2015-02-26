@@ -14,73 +14,31 @@ public class Yhtalo {
         oikeapuoli = new ArrayList<Komponentti>();
     }
     
-    public boolean supista() {
-        boolean vasen = supistaJosMahdollistaTermeiksi(vasenpuoli);
-        if (supistaJosMahdollistaTermeiksi(oikeapuoli) && vasen) {
-            this.supistaPuoletYhteenTermeina();
-            return true;
-        } else {
-            this.supistaPuoletYhteenKomponentteina();
-            return false;
-        }
+    public Yhtalo(List<Komponentti> vasen, List<Komponentti> oikea) {
+        vasenpuoli = vasen;
+        oikeapuoli = oikea;
     }
     
-    public boolean supistaJosMahdollistaTermeiksi(List<Komponentti> lista) {
-        // identtinen Lausekkeen metodiin supistaSisalto()
-        boolean supistuiko = true;
-        for (int i = 0; i < lista.size(); i++) {
-            Komponentti k = lista.get(i);
-            if (k.supista()==false) {
-                // lisää sisällön perään, joten supistamattomat laskutoimitukset jumittavat viimeisiksi
-                List<Komponentti> tulos = k.palautaTulosListana();
-                lista.remove(i);
-                lista.addAll(tulos);
-                supistuiko = false;
-            } else {
-                // kenties voisin käyttää palautaTulosListana ja getata Termi mutta saattaa olla
-                // epästabiilimpaa. Mene ja tiedä.
-                if (k.onkoLaskutoimitus()) {
-                    Laskutoimitus la = (Laskutoimitus) k;
-                    lista.add(i, la.palautaTulos());
-                    lista.remove(i+1);
-                } else if (k.onkoLauseke()) {
-                    Lauseke l = (Lauseke) k;
-                    lista.add(i, l.palautaTulos());
-                    lista.remove(i+1);
-                }
-            }
-        }
-        return supistuiko;
+    public void supistaSiirtamatta() {
+        vasenpuoli = this.supistaListaKomponentteina(vasenpuoli);
+        oikeapuoli = this.supistaListaKomponentteina(oikeapuoli);
     }
     
-    public void supistaPuoletYhteenKomponentteina() {
-        // ehkä parempi siirtaa vain oikealle puolelle ja sitten käydä läpi
-        // säästyy hieman koodia
-        for (int i = 0; i < vasenpuoli.size(); i++) {
-            Komponentti k = vasenpuoli.get(i);
-            if (k.onkoLaskutoimitus()) {
-                Laskutoimitus la = (Laskutoimitus) k;
-                vasenpuoli.addAll(la.palautaTulosListana());
-                vasenpuoli.remove(i);
-            } else if (k.onkoLauseke()) {
-                Lauseke l = (Lauseke) k;
-                vasenpuoli.addAll(l.palautaTulosListana());
-                vasenpuoli.remove(i);
-            }
+    public List<Komponentti> supistaListaKomponentteina(List<Komponentti> lista) {
+        List<Komponentti> valmis = new ArrayList<>();
+        for (Komponentti k : lista) {
+            k.supista();
+            valmis.addAll(k.palautaTulosListana());
         }
+        return valmis;
+    }
+    
+    public void siirraKaikkiVasemmalle() {
         for (Komponentti k : oikeapuoli) {
             k.muutaNegatiiviseksi();
-            if (k.onkoLaskutoimitus()) {
-                Laskutoimitus la = (Laskutoimitus) k;
-                vasenpuoli.addAll(la.palautaTulosListana());
-            } else if (k.onkoLauseke()) {
-                Lauseke l = (Lauseke) k;
-                vasenpuoli.addAll(l.palautaTulosListana());
-            } else {
-                vasenpuoli.add(k);
-            }
         }
-        oikeapuoli = new ArrayList<Komponentti>();
+        vasenpuoli.addAll(oikeapuoli);
+        oikeapuoli = new ArrayList<>();
     }
     
     public void supistaPuoletYhteenTermeina() {
@@ -94,12 +52,32 @@ public class Yhtalo {
         }
     }
     
-//    public void sijoitaMuuttujantilalle(List<Komponentti> lista) {
-//        for (int i = 0; i < arr.length; i++) {
-//            Object arr = arr[i];
-//            
-//        }
-//    }
+    public void sijoitaMuuttujantilalle(List<Termi> lista) {
+        this.sijoitaListaan(lista, vasenpuoli);
+        this.sijoitaListaan(lista, oikeapuoli);
+    }
+    
+    public void sijoitaListaan(List<Termi> lista, List<Komponentti> puoli) {
+        for (int i = 0; i < puoli.size(); i++) {
+            Lauseke l = puoli.get(i).sijoitaMuuttujanTilalle(lista);
+            if (l.eikoOleTyhja()) {
+                puoli.add(i, l);
+                puoli.remove(i+1);
+            }
+        }
+    }
+    
+    public Yhtalo kopioi() {
+        List<Komponentti> vasen = new ArrayList<>();
+        for (Komponentti k : vasenpuoli) {
+            vasen.add(k.kopioi());
+        }
+        List<Komponentti> oikea = new ArrayList<>();
+        for (Komponentti k : oikeapuoli) {
+            oikea.add(k.kopioi());
+        }
+        return new Yhtalo(vasen, oikea);
+    }
     
     public void annaVasenPuoli(List<Komponentti> l) { vasenpuoli = l; }
     

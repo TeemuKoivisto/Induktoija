@@ -15,21 +15,10 @@ public class Summa implements Komponentti {
     }
     
     public Lauseke sijoitaMuuttujanTilalle(List<Termi> lista) {
-        Lauseke lauseke = new Lauseke();
-        summa.sijoitaMuuttujanTilalle(lista);
-        return lauseke;
-    }
-    
-    public void sijoitakplus1() {
-        // sijoita muuttujan tilalle k+1
-        for (int i = 0; i < summa.getSisalto().size(); i++) {
-            Komponentti k = summa.getSisalto().get(i);
-            // eihän tää vittu toimi
-            // jos vaik lauseke, jos monta muuttujaa?
-            if (k.sisaltaakoMuuttujan()) {
-                k.summaa(new Termi(1, 0));
-            }
-        }
+//        Lauseke lauseke = new Lauseke();
+//        summa.sijoitaMuuttujanTilalle(lista);
+//        return lauseke;
+        return summa.sijoitaMuuttujanTilalle(lista);
     }
     
     @Override
@@ -39,7 +28,8 @@ public class Summa implements Komponentti {
 
     @Override
     public boolean summaa(Komponentti k) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        summa.getSisalto().addAll(k.palautaTulosListana());
+        return true;
     }
 
     @Override
@@ -68,7 +58,7 @@ public class Summa implements Komponentti {
     }
     
     public Komponentti kopioi() {
-        return new Summa(ylaraja, alaraja, summa);
+        return new Summa((Termi) ylaraja.kopioi(), (Termi) alaraja.kopioi(), (Lauseke) summa.kopioi());
     }
     
     @Override
@@ -91,8 +81,20 @@ public class Summa implements Komponentti {
         return true;
     }
 
+    public Lauseke getLauseke() {
+        return summa;
+    }
+    
     public Termi getAlaraja() {
         return alaraja;
+    }
+    
+    public boolean onkoSamanArvoinen(Komponentti kom) {
+        if (kom.onkoSumma()) {
+            Summa sig = (Summa) kom;
+            return sig.getLauseke().onkoSamanArvoinen(this.summa); // vertaa muita arvoja?? naaah
+        }
+        return false;
     }
     
     public String toString() {

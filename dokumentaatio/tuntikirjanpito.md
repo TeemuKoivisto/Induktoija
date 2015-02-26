@@ -56,3 +56,6 @@ Piirsin myös luokkakaavion ja aloitin testejen tekemisen.
 23.2 1.5h - Parantelin sijoitaMuuttujanTilalle-metodin toiminallisuutta, joka nyt osaa
 sijoittaa muuttujan tilalle n+1 kuten induktio-oletuksessa halutaan. Enää tarvitaan vain
 kunnollinen metodi, joka tuottaa induktio-väittämän ja vertaa ovatko puolet identtiset.
+
+25.2 3h - Kommentoin turhia metodeja ja suoraviivaistin koko laskinta. Paransin myös
+induktointia.

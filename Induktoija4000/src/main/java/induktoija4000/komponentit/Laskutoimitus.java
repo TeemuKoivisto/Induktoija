@@ -57,6 +57,10 @@ public class Laskutoimitus implements Komponentti {
             }
             ekaTekija.kerro(tokaTekija);
         }
+        // pitäisi estää typeriä supistusvirheitä
+        if (jaettu) {
+            tokaTekija = new Termi(1, 0);
+        }
         supistettu = true;
         supistettuOnnistuneesti = (eka && toka);
         return supistettuOnnistuneesti;
@@ -187,9 +191,8 @@ public class Laskutoimitus implements Komponentti {
     }
 
     public Komponentti kopioi() {
-        Laskutoimitus t = new Laskutoimitus(ekaTekija, tyyppi, tokaTekija);
-        t.supista();
-        return t;
+        Laskutoimitus la = new Laskutoimitus(ekaTekija.kopioi(), tyyppi, tokaTekija.kopioi());
+        return la;
     }
 
     public boolean onkoTermi() { return false; }
@@ -199,6 +202,20 @@ public class Laskutoimitus implements Komponentti {
     public boolean onkoLauseke() { return false; }
     
     public boolean onkoSumma() { return false; }
+    
+    public boolean onkoSamanArvoinen(Komponentti kom) {
+        if (kom.onkoLaskutoimitus()) {
+            Laskutoimitus la = (Laskutoimitus) kom.kopioi();
+            this.supista();
+            la.supista();
+            if (jaettu) {
+                return ekaTekija.onkoSamanArvoinen(la.getEkatekija());
+            } else {
+                return ekaTekija.onkoSamanArvoinen(la.getEkatekija()) && tokaTekija.onkoSamanArvoinen(la.getTokatekija());
+            }
+        }
+        return false;
+    }
     
     public String toString() {
         if (supistettu && jaettu) {

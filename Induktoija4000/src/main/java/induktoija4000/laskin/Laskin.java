@@ -25,92 +25,93 @@ public class Laskin {
         yhtalo = y;
     }
     
-    public void laske() {
+    public void lyhempiLaske() {
         System.out.println("\nluetaan...");
         System.out.println(yhtalo);
         yhtalo.tulostaTyypit();
         
-        induktoi();
-        System.out.println(yhtalo);
+        if (yhtalo.getVasenpuoli().get(0).onkoSumma()) {
+            this.induktioLaske();
+            return;
+        }
         
         System.out.println("\nsupistetaan...");
-        boolean induktoinko = yhtalo.supista();
+        yhtalo.supistaSiirtamatta();
+        yhtalo.siirraKaikkiVasemmalle();
         System.out.println(yhtalo);
         yhtalo.tulostaTyypit();
         
         System.out.println("\nlasketaan kaikki yhteen...");
-        if (induktoinko==true) {
-            this.laskeYhteenKaikkiTermeina();
-        } else {
-            System.out.println("SUPRISE INDUKTIO");
-//            this.induktoi();
-            System.out.println("oooh");
-            yhtalo.supista();
-            this.laskeYhteenKaikkiKomponentteina();
-            System.out.println(yhtalo);
-            System.out.println("\njarjestetaan kaikki...");
-            this.jarjestaKomponentit();
-            System.out.println(yhtalo);
-            this.ratkaiseKomponenteistaKoostuvaYhtalo();
-            return;
-        }
+        this.laskeMolemmatPuoletYhteenSiirtamatta();
         System.out.println(yhtalo);
         
         System.out.println("\njarjestetaan kaikki...");
-        this.jarjestaTermit();
+        this.jarjestaKomponentit();
         System.out.println(yhtalo);
         
         System.out.println("\nratkaistaan yhtalo...");
-        this.ratkaiseTermeistaKoostuvaYhtalo();
-        //System.out.println(yhtalo);
+        this.ratkaiseKomponenteistaKoostuvaYhtalo();
+        System.out.println(yhtalo);
     }
     
-    public void induktoi() {
-        Summa summa = new Summa(new Termi(1,1), new Termi(0,0), new Lauseke());
-//        laskeInduktioAskel(summa);
-        this.laskekplus1();
-        // pura eri komponenteista koostuva yhtalo osiin
-        // jotka sitten kerrot/jaat tarpeen mukaan
-        // kunnes jäljellä on pelkkä kaunis ratkaisu
-    }
-    
-    public void laskeInduktioAskel(Summa summa) {
-        List<Termi> sijoitus = new ArrayList<>();
-        sijoitus.add(summa.getAlaraja());
-        List<Komponentti> oikea = yhtalo.getVasenpuoli();
-        System.out.println("lasketaan induktioaskel arvolla " + summa.getAlaraja().getArvo());
+    public void induktioLaske() {
+        System.out.println("\nlasketaan induktioaskel arvolla 0...");
+        this.induktioAskelNollalla();
+        System.out.println(yhtalo);
+        
+        System.out.println("\njatketaan vaikkei tarkistettu pätikö...");
+        System.out.println("ensin lisätään vasemmalle puolelle n + 1, joka siirretään oikealle puolelle");
+        List<Komponentti> vasen = this.laskekplus1("vasen");
+        
+        System.out.println("\nsitten lasketaan oikeapuoli");
+        List<Komponentti> oikea = this.laskekplus1("oikea");
+        
+        System.out.println("\njos sitten vasen ja oikea ovat samat niin gz. induktio successfull");
+        System.out.println(vasen);
         System.out.println(oikea);
-        for (int i = 0; i < oikea.size(); i++) {
-            Komponentti k = oikea.get(i);
-            k.sijoitaMuuttujanTilalle(sijoitus);
-        }
-        System.out.println(oikea);
+        System.out.println(this.tarkistaOnkoPuoletSamat(vasen, oikea));
+//        System.out.println(this.tarkistaOnkoPuoletSamatMuuttamattaPuolia(vasen, oikea));
     }
     
-    public void laskekplus1() {
-        List<Komponentti> vasen = yhtalo.getVasenpuoli();
+    public List<Komponentti> laskekplus1(String puoli) {
         List<Termi> sijoitus = new ArrayList<>();
         sijoitus.add(new Termi(1, 1));
         sijoitus.add(new Termi(1, 0));
-        System.out.println("lasketaan k + 1");
-        System.out.println(vasen);
-        for (int i = 0; i < vasen.size(); i++) {
-            Lauseke tulos = vasen.get(i).sijoitaMuuttujanTilalle(sijoitus);
-            if (!tulos.getSisalto().isEmpty()) {
-                vasen.add(i, tulos);
-                vasen.remove(i+1);
-            }
+        Yhtalo y = yhtalo.kopioi();
+        System.out.println(y);
+        List<Komponentti> oikeapuoli = y.getOikeapuoli();
+        if (puoli.equals("vasen")) {
+            y.sijoitaListaan(sijoitus, y.getVasenpuoli());
+            oikeapuoli.addAll(y.getVasenpuoli());
+        } else {
+            y.sijoitaListaan(sijoitus, oikeapuoli);
         }
-        System.out.println(vasen);
+        y.annaVasenPuoli(new ArrayList<Komponentti>());
+        y.supistaSiirtamatta();
+        this.laskeListaYhteen(y.getOikeapuoli());
+        this.jarjestaLista(y.getOikeapuoli());
+        System.out.println(y);
+        return y.getOikeapuoli();
     }
     
-    public void laskeYhteenKaikkiKomponentteina() {
-        for (int i = 0; i < yhtalo.getVasenpuoli().size(); i++) {
-            Komponentti eka = yhtalo.getVasenpuoli().get(i);
-            for (int j = 0; j < yhtalo.getVasenpuoli().size(); j++) {
-                Komponentti toka = yhtalo.getVasenpuoli().get(j);
+    public void induktioAskelNollalla() {
+        List<Termi> sijoitus = new ArrayList<>();
+        sijoitus.add(new Termi(0, 0));
+        Yhtalo y = yhtalo.kopioi();
+        System.out.println(y);
+        y.sijoitaMuuttujantilalle(sijoitus);
+        y.supistaSiirtamatta();
+        System.out.println("onko puolet samat =" + this.tarkistaOnkoPuoletSamatMuuttamattaPuolia(y.getVasenpuoli(), y.getOikeapuoli()));
+        System.out.println(y);
+    }
+    
+    public List<Komponentti> laskeListaYhteen(List<Komponentti> lista) {
+        for (int i = 0; i < lista.size(); i++) {
+            Komponentti eka = lista.get(i);
+            for (int j = 0; j < lista.size(); j++) {
+                Komponentti toka = lista.get(j);
                 if (i!=j && eka.summaa(toka)) {
-                    yhtalo.getVasenpuoli().remove(j);
+                    lista.remove(j);
                     j--;
                 }
             }
@@ -118,11 +119,17 @@ public class Laskin {
             if (eka.onkoTermi()) {
                 Termi t = (Termi) eka;
                 if (t.getArvo()==0) {
-                    yhtalo.getVasenpuoli().remove(i);
+                    lista.remove(i);
                     i--;
                 }
             }
         }
+        return lista;
+    }
+    
+    public void laskeMolemmatPuoletYhteenSiirtamatta() {
+        this.laskeListaYhteen(yhtalo.getVasenpuoli());
+        this.laskeListaYhteen(yhtalo.getOikeapuoli());
     }
     
     public void ratkaiseKomponenteistaKoostuvaYhtalo() {
@@ -138,11 +145,12 @@ public class Laskin {
         }
         if (summa) {
             // jos sisaltaa jakamattoman laskutoimituksen?? eee
-            induktoi();
+//            induktoi();
         } else if (jakamatonlaskutoimitus) {
             //kerro kunnes paska on tasan
         } else {
-            yhtalo.supista();
+            yhtalo.supistaSiirtamatta();
+            yhtalo.supistaPuoletYhteenTermeina();
             this.jarjestaTermit();
             this.ratkaiseTermeistaKoostuvaYhtalo();
         }
@@ -242,26 +250,69 @@ public class Laskin {
         }
     }
     
-    public void laskeYhteenKaikkiTermeina() {
-        List<Termi> termit = yhtalo.getTermit();
-        for (int i = 0; i < termit.size(); i++) {
-            Termi eka = termit.get(i);
-            for (int j = 0; j < termit.size(); j++) {
-                if (i!=j && eka.summaa(termit.get(j))) {
-                    termit.add(i, eka);
-                    termit.remove(i + 1);
-                    termit.remove(j);
+//    public void laskeYhteenKaikkiTermeina() {
+//        List<Termi> termit = yhtalo.getTermit();
+//        for (int i = 0; i < termit.size(); i++) {
+//            Termi eka = termit.get(i);
+//            for (int j = 0; j < termit.size(); j++) {
+//                if (i!=j && eka.summaa(termit.get(j))) {
+//                    termit.add(i, eka);
+//                    termit.remove(i + 1);
+//                    termit.remove(j);
+//                    j--;
+//                }
+//            }
+//        }
+//        // poistetaan tyhjät termit
+//        for (int i = 0; i < termit.size(); i++) {
+//            Termi eka = termit.get(i);
+//            if (eka.getArvo()==0) {
+//                termit.remove(i);
+//            }
+//        }
+//    }
+    
+    public boolean tarkistaOnkoPuoletSamat(List<Komponentti> ekapuoli, List<Komponentti> tokapuoli) {
+        for (int i = 0; i < ekapuoli.size(); i++) {
+            Komponentti eka = ekapuoli.get(i);
+            for (int j = 0; j < tokapuoli.size(); j++) {
+                Komponentti toka = tokapuoli.get(j);
+                if (eka.onkoSamanArvoinen(toka)) {
+                    ekapuoli.remove(i);
+                    tokapuoli.remove(j);
+                    i--;
                     j--;
                 }
             }
         }
-        // poistetaan tyhjät termit
-        for (int i = 0; i < termit.size(); i++) {
-            Termi eka = termit.get(i);
-            if (eka.getArvo()==0) {
-                termit.remove(i);
+        return ekapuoli.isEmpty() && tokapuoli.isEmpty();
+    }
+    
+    public boolean tarkistaOnkoPuoletSamatMuuttamattaPuolia(List<Komponentti> ekapuoli, List<Komponentti> tokapuoli) {
+        List<Komponentti> ekavalmis = new ArrayList<>();
+        List<Komponentti> tokavalmis = new ArrayList<>();
+        for (int i = 0; i < ekapuoli.size(); i++) {
+            Komponentti eka = ekapuoli.get(i);
+            for (int j = 0; j < tokapuoli.size(); j++) {
+                Komponentti toka = tokapuoli.get(j);
+                if (eka.onkoSamanArvoinen(toka)) {
+                    ekavalmis.add(eka);
+                    tokavalmis.add(toka);
+                    ekapuoli.remove(i);
+                    tokapuoli.remove(j);
+                    i--;
+                    j--;
+                }
             }
         }
+        boolean onko = ekapuoli.isEmpty() && tokapuoli.isEmpty();
+        ekapuoli.addAll(ekavalmis);
+        tokapuoli.addAll(tokavalmis);
+        return onko;
+    }
+    
+    public void jarjestaLista(List<Komponentti> lista) {
+        Collections.sort(lista, new KomponenttiComparator());
     }
     
     public void jarjestaKomponentit() {

@@ -69,7 +69,7 @@ public class LausekeTest {
         lasku.supista();
         // (n^2 + n)/(n + 1)
         Termi vastaus = lasku.palautaTulos();
-//        assertTrue(vastaus.toString().equals("n"));
+//        assertTrue(vastaus.toString().onkoSamanArvoinen("n"));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class LausekeTest {
         lasku.supista();
         // (n^2 + n)/(n + 1)
         Lauseke vastaus = (Lauseke) lasku.getEkatekija();
-//        assertTrue(vastaus.toString().equals("n"));
+//        assertTrue(vastaus.toString().onkoSamanArvoinen("n"));
     }
 
     @Test
@@ -132,6 +132,6 @@ public class LausekeTest {
         Laskutoimitus la = new Laskutoimitus(lauseke, '*', lauseke);
         la.supista();
         Lauseke vastaus = (Lauseke) la.getEkatekija();
-//        assertTrue(vastaus.toString().equals("(n^2.0 2.0n 1.0)"));
+//        assertTrue(vastaus.toString().onkoSamanArvoinen("(n^2.0 2.0n 1.0)"));
     }
 }

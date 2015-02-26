@@ -2,6 +2,7 @@ package induktoija4000.komponentit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Lauseke implements Komponentti{
 
@@ -237,6 +238,10 @@ public class Lauseke implements Komponentti{
         return false;
     }
     
+    public boolean eikoOleTyhja() {
+        return !sisalto.isEmpty();
+    }
+    
     public boolean onkoTyhja() {
         return sisalto.isEmpty();
     }
@@ -246,8 +251,10 @@ public class Lauseke implements Komponentti{
     }
     
     public Komponentti kopioi() {
-        Lauseke l = new Lauseke(sisalto);
-        l.supista();
+        Lauseke l = new Lauseke();
+        for (Komponentti k : sisalto) {
+            l.lisaa(k.kopioi());
+        }
         return l;
     }
     
@@ -272,6 +279,23 @@ public class Lauseke implements Komponentti{
     public boolean onkoLauseke() { return true; }
     
     public boolean onkoSumma() { return false; }
+    
+    public boolean onkoSamanArvoinen(Komponentti kom) {
+        if (kom.onkoLauseke()) {
+            Lauseke l = (Lauseke) kom.kopioi();
+            int maara = 0;
+            for (Komponentti k : sisalto) {
+                for (int i = 0; i < l.getSisalto().size(); i++) {
+                    if (k.onkoSamanArvoinen(l.getSisalto().get(i))) {
+                        l.getSisalto().remove(i);
+                        maara++;
+                    }
+                }
+            }
+            return maara==sisalto.size() && l.getSisalto().isEmpty();
+        }
+        return false;
+    }
     
     public String toString() {
         String tuloste = "(";

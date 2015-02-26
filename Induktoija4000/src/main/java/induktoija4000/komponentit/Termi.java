@@ -104,7 +104,7 @@ public class Termi implements Komponentti{
     
     public boolean jaa(Komponentti k) {
         List<Komponentti> jakaja = k.palautaTulosListana();
-        if (jakaja.size()>1 || jakaja.get(0).onkoLaskutoimitus()) {
+        if (jakaja.size()>1 || jakaja.get(0).onkoLaskutoimitus() || jakaja.get(0).onkoLauseke()) {
             return false;
         } else {
             Termi t = (Termi) jakaja.get(0);
@@ -175,6 +175,14 @@ public class Termi implements Komponentti{
     public boolean onkoLauseke() { return false; }
     
     public boolean onkoSumma() { return false; }
+    
+    public boolean onkoSamanArvoinen(Komponentti kom) {
+        if (kom.onkoTermi()) {
+            Termi t = (Termi) kom;
+            return arvo == t.getArvo() && muuttuja == t.getMuuttuja();
+        }
+        return false;
+    }
     
     public String toString() {
         if (muuttuja == 0) {

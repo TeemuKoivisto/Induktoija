@@ -26,7 +26,9 @@ public class Kayttis {
             String syote = lukija.nextLine();
             
             laskin.annaSyote(syote);
-            laskin.laske();
+            laskin.lyhempiLaske();
+//            System.out.println("\n\n");
+//            laskin.laske();
             break;
         }
     }
