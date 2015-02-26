@@ -59,3 +59,6 @@ kunnollinen metodi, joka tuottaa induktio-väittämän ja vertaa ovatko puolet iden
 
 25.2 3h - Kommentoin turhia metodeja ja suoraviivaistin koko laskinta. Paransin myös
 induktointia.
+
+26.2 4.5h - Järjestin ja selkeytin koodia. Turhia metodeja läx jälleen. Lisäsin myös testejä.
+Rivikattavuus nyt 61% ja mutaatio 40%.

@@ -75,7 +75,7 @@ public class Lukija {
                 Summa summa = lueSummaLoppuun();
                 lista.add(summa);
             } else {
-                System.out.println("paskaa syÃ¶tit. hyi hyi.");
+                System.out.println("gagga syöte. merkki oli " + c + " ja haluttiin " + merkki);
             }
         }
         return lista;

@@ -52,15 +52,14 @@ public class TermiTest {
         Termi muuttuja = new Termi(1, 1);
         Termi vakio = new Termi(1, 0);
         // 6*(n/(1+n))
+        // >> 6(1+n)/1
         eka.lisaa(muuttuja);
         eka.lisaa(vakio);
-        Laskutoimitus la = new Laskutoimitus(muuttuja, '/', eka);
+        Laskutoimitus la = new Laskutoimitus(muuttuja.kopioi(), '/', eka);
         toka.lisaa(la);
         Laskutoimitus tama = new Laskutoimitus(kertoja, '*', toka);
         tama.supista();
-        // 6n/(1+n) >> haluttu mutta koska lauseke niin swappas tekijat joten
-        // (n/(1+n)) tuli ekaTekija mut hei kuhan toimii
-        assertTrue(tama.toString().equals("(6.0n/(6.0n 1.0))"));
+        assertTrue(tama.toString().equals("6.0n/(n 1.0)"));
         
     }
     
@@ -80,11 +79,11 @@ public class TermiTest {
     }
     
     @Test
-    public void testaaTerminJakaminen() {
+    public void testaaTerminJakaminenTermilla() {
         Termi eka = new Termi(6, 1);
         Termi toka = new Termi(6, 1);
         eka.jaa(toka);
-        assertEquals(null, 1.0, eka.getArvo(), 0);
+        assertEquals(1.0, eka.getArvo(), 0);
     }
     
     @Test

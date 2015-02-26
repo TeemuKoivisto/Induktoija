@@ -65,20 +65,14 @@ public class Termi implements Komponentti{
             }
         } else {
             Termi t = lista.get(0);
-            // teen tämän joskus paremmin
             // 3n^2 -> 5n = 3 * (5n * 5n)
-            if (t.sisaltaakoMuuttujan()) {
-                Termi tulos = (Termi) t.kopioi();
-                for (int i = 1; i < muuttuja; i++) {
-                    tulos.kerro(t);
-                }
-                tulos.kerro(new Termi(arvo, 0));
-                this.alusta(tulos.getArvo(), tulos.getMuuttuja());
-            } else {
-                // 3n^2 -> 5 = 3 * 5^2
-                arvo = arvo * Math.pow(t.getArvo(), muuttuja);
-                muuttuja = 0;
+            // 3n^2 -> 5 = 3 * (5 * 5)
+            Termi tulos = (Termi) t.kopioi();
+            for (int i = 1; i < muuttuja; i++) {
+                tulos.kerro(t);
             }
+            tulos.kerro(new Termi(arvo, 0));
+            this.alusta(tulos.getArvo(), tulos.getMuuttuja());
             lauseke.lisaa(this);
         }
         return lauseke;
@@ -118,7 +112,7 @@ public class Termi implements Komponentti{
     
     public boolean kerro(Komponentti k) {
         Komponentti kertoja = k.palautaTulosListana().get(0);
-        if (k.palautaTulosListana().size()>1 || kertoja.onkoLaskutoimitus() || kertoja.onkoLauseke()) {
+        if (k.palautaTulosListana().size()>1 || kertoja.onkoLaskutoimitus()) {
             return false;
         } else {
             Termi t = (Termi) kertoja;
@@ -179,6 +173,7 @@ public class Termi implements Komponentti{
     public boolean onkoSamanArvoinen(Komponentti kom) {
         if (kom.onkoTermi()) {
             Termi t = (Termi) kom;
+            
             return arvo == t.getArvo() && muuttuja == t.getMuuttuja();
         }
         return false;

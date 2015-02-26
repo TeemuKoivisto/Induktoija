@@ -11,11 +11,11 @@ public interface Komponentti {
     public boolean summaa(Komponentti k);
     public boolean kerro(Komponentti k);
     public boolean jaa(Komponentti k);
+    public boolean onkoSamanArvoinen(Komponentti k);
     public boolean onkoTermi();
     public boolean onkoLaskutoimitus();
     public boolean onkoLauseke();
     public boolean onkoSumma();
     public boolean sisaltaakoMuuttujan();
-    public boolean onkoSamanArvoinen(Komponentti k);
     public Lauseke sijoitaMuuttujanTilalle(List<Termi> lista);
 }

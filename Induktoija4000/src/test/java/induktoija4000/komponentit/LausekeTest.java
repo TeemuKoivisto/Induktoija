@@ -68,7 +68,7 @@ public class LausekeTest {
         Laskutoimitus lasku = new Laskutoimitus(kerrottava, '*', kertoja);
         lasku.supista();
         // (n^2 + n)/(n + 1)
-        Termi vastaus = lasku.palautaTulos();
+        Termi vastaus = (Termi) lasku.palautaTulosListana().get(0);
 //        assertTrue(vastaus.toString().onkoSamanArvoinen("n"));
     }
 

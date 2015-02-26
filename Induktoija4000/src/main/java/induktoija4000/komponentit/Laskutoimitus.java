@@ -26,22 +26,12 @@ public class Laskutoimitus implements Komponentti {
     }
 
     public boolean supista() {
-        boolean eka = ekaTekija.supista();
-        boolean toka = tokaTekija.supista();
-        if (eka) {
-            List<Komponentti> tulos = ekaTekija.palautaTulosListana();
-            // pitäisi olla aina kooltaan 1!!!!
-            ekaTekija = tulos.get(0);
-        }
-        if (toka) {
-            tokaTekija = tokaTekija.palautaTulosListana().get(0);
-        }
-        // tyyppi=='/' && !toka == x/(x+1) tai vastaavaa...
+        this.supistaTekijat();
         if (tyyppi=='/') {
-            Komponentti jakaja = tokaTekija.palautaTulosListana().get(0);
-            if (ekaTekija.onkoTermi() && jakaja.onkoLaskutoimitus()) {
+            // 4/(6/(n+1)) >> 4(n+1)/6
+            if (ekaTekija.onkoTermi() && tokaTekija.onkoLaskutoimitus()) {
                 Termi ekaT = (Termi) ekaTekija;
-                Laskutoimitus la = (Laskutoimitus) jakaja;
+                Laskutoimitus la = (Laskutoimitus) tokaTekija;
                 tokaTekija = la.getEkatekija().kopioi();
                 ekaTekija = la.getTokatekija();
                 ekaTekija.kerro(ekaT);
@@ -49,30 +39,32 @@ public class Laskutoimitus implements Komponentti {
                 jaettu = ekaTekija.jaa(tokaTekija);
             }
         } else {
-            // tarkistetaan kerrotaanko Termia Lausekkeella. Koska se ei ole kivaa...
-            if (ekaTekija.onkoTermi() && (tokaTekija.onkoLauseke())) { // || ekaTekija.onkoLaskutoimitus())
+            // käännetään jos kerrotaan Termia Lausekkeella. Termi kun ei osaa palauttaa lauseketta...
+            if (ekaTekija.onkoTermi() && (tokaTekija.onkoLauseke() || tokaTekija.onkoLaskutoimitus())) {
                 Komponentti ekaT = ekaTekija;
                 ekaTekija = tokaTekija;
                 tokaTekija = ekaT;
             }
             ekaTekija.kerro(tokaTekija);
         }
+        supistettu = true;
         // pitäisi estää typeriä supistusvirheitä
         if (jaettu) {
             tokaTekija = new Termi(1, 0);
         }
-        supistettu = true;
-        supistettuOnnistuneesti = (eka && toka);
-        return supistettuOnnistuneesti;
+        // true jos supistettu yhdeksi termiksi
+        return jaettu && ekaTekija.palautaTulosListana().size()==1 && !ekaTekija.onkoLaskutoimitus();
     }
 
+    public void supistaTekijat() {
+        ekaTekija.supista();
+        tokaTekija.supista();
+        // korvaa supistetut laskutoimitukset termeilla
+        if (ekaTekija.palautaTulosListana().size()==1) ekaTekija=ekaTekija.palautaTulosListana().get(0);
+        if (tokaTekija.palautaTulosListana().size()==1) tokaTekija=tokaTekija.palautaTulosListana().get(0);
+    }
+    
     public Lauseke sijoitaMuuttujanTilalle(List<Termi> lista) {
-        Lauseke lauseke = new Lauseke();
-//        if (tulos!=null) {
-//            tulos.sijoitaMuuttujanTilalle(lista);
-//        } else if (supistettu) {
-//            ekaTekija.sijoitaMuuttujanTilalle(lista);
-//        } else {
         Lauseke eka = ekaTekija.sijoitaMuuttujanTilalle(lista);
         Lauseke toka = tokaTekija.sijoitaMuuttujanTilalle(lista);
         if (!eka.onkoTyhja()) {
@@ -81,7 +73,7 @@ public class Laskutoimitus implements Komponentti {
         if (!toka.onkoTyhja()) {
             tokaTekija = toka;
         }
-        return lauseke;
+        return new Lauseke();
     }
     
     public boolean summaa(Komponentti k) {
@@ -148,19 +140,19 @@ public class Laskutoimitus implements Komponentti {
         return lista;
     }
     
-    public Termi palautaTulos() {
-        if (ekaTekija.onkoLaskutoimitus()) {
-            Laskutoimitus la = (Laskutoimitus) ekaTekija;
-            return la.palautaTulos();
-        } else if (ekaTekija.onkoLauseke()) {
-            Lauseke l = (Lauseke) ekaTekija;
-            return l.palautaTulos();
-        } else if (ekaTekija.onkoTermi()) {
-            return (Termi) ekaTekija;
-        } else {
-            throw new RuntimeException("Laskutoimituksen palautaTulos sai Summan. Nam");
-        }
-    }
+//    public Termi palautaTulos() {
+//        if (ekaTekija.onkoLaskutoimitus()) {
+//            Laskutoimitus la = (Laskutoimitus) ekaTekija;
+//            return la.palautaTulos();
+//        } else if (ekaTekija.onkoLauseke()) {
+//            Lauseke l = (Lauseke) ekaTekija;
+//            return l.palautaTulos();
+//        } else if (ekaTekija.onkoTermi()) {
+//            return (Termi) ekaTekija;
+//        } else {
+//            throw new RuntimeException("Laskutoimituksen palautaTulos sai Summan. Nam");
+//        }
+//    }
     
     public Komponentti getEkatekija() {
         return ekaTekija;

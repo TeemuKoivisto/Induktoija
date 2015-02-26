@@ -25,21 +25,20 @@ public class Laskin {
         yhtalo = y;
     }
     
-    public void lyhempiLaske() {
+    public boolean laske() {
         System.out.println("\nluetaan...");
         System.out.println(yhtalo);
-        yhtalo.tulostaTyypit();
         
         if (yhtalo.getVasenpuoli().get(0).onkoSumma()) {
-            this.induktioLaske();
-            return;
+            System.out.println("\nensimmäinen komponentti oli summa");
+            System.out.println("induktoidaan:");
+            return induktioLaske();
         }
         
         System.out.println("\nsupistetaan...");
         yhtalo.supistaSiirtamatta();
         yhtalo.siirraKaikkiVasemmalle();
         System.out.println(yhtalo);
-        yhtalo.tulostaTyypit();
         
         System.out.println("\nlasketaan kaikki yhteen...");
         this.laskeMolemmatPuoletYhteenSiirtamatta();
@@ -52,25 +51,34 @@ public class Laskin {
         System.out.println("\nratkaistaan yhtalo...");
         this.ratkaiseKomponenteistaKoostuvaYhtalo();
         System.out.println(yhtalo);
+        return false;
     }
     
-    public void induktioLaske() {
-        System.out.println("\nlasketaan induktioaskel arvolla 0...");
-        this.induktioAskelNollalla();
-        System.out.println(yhtalo);
+    public boolean induktioLaske() {
+        Summa summa = (Summa) yhtalo.getVasenpuoli().get(0);
+        System.out.println("\nlasketaan induktioaskel arvolla " + summa.getAlaraja() + "...");
+        boolean pateeko = this.laskeInduktioAskel(summa.getAlaraja());
         
-        System.out.println("\njatketaan vaikkei tarkistettu pätikö...");
-        System.out.println("ensin lisätään vasemmalle puolelle n + 1, joka siirretään oikealle puolelle");
+        if (!pateeko) {
+            System.out.println("heh heh induktioaskel ei pätenytkään");
+            return false;
+        }
+        System.out.println("\ninduktio-oletus: oletetaan, että yhtalo pätee luvulla n=k, k<N"
+                + "\ninduktioväitteen mukaan yhtälön on pädettävä myös luvulla k+1"
+                + "\ntodistetaan, että induktioväite pätee"
+                + "\n(asioiden helpottamiseksi k:ta esitetään n:lla)");
+        System.out.println("\nensin lisätään vasemmalle puolelle n + 1, joka lisätään oikeaan puoleen (muuttamatta negatiiviseksi)");
         List<Komponentti> vasen = this.laskekplus1("vasen");
         
-        System.out.println("\nsitten lasketaan oikeapuoli");
+        System.out.println("\nsitten lisätään oikealle puolelle n + 1 koskematta vasempaan");
         List<Komponentti> oikea = this.laskekplus1("oikea");
         
-        System.out.println("\njos sitten vasen ja oikea ovat samat niin gz. induktio successfull");
+        System.out.println("\njos puolet ovat samat on induktioväite tosi");
         System.out.println(vasen);
         System.out.println(oikea);
-        System.out.println(this.tarkistaOnkoPuoletSamat(vasen, oikea));
-//        System.out.println(this.tarkistaOnkoPuoletSamatMuuttamattaPuolia(vasen, oikea));
+        pateeko = this.tarkistaOnkoPuoletSamat(vasen, oikea);
+        System.out.println(pateeko);
+        return pateeko;
     }
     
     public List<Komponentti> laskekplus1(String puoli) {
@@ -86,23 +94,28 @@ public class Laskin {
         } else {
             y.sijoitaListaan(sijoitus, oikeapuoli);
         }
-        y.annaVasenPuoli(new ArrayList<Komponentti>());
+        y.getVasenpuoli().clear();
+        System.out.println(y);
         y.supistaSiirtamatta();
+        System.out.println(y);
         this.laskeListaYhteen(y.getOikeapuoli());
         this.jarjestaLista(y.getOikeapuoli());
         System.out.println(y);
         return y.getOikeapuoli();
     }
     
-    public void induktioAskelNollalla() {
+    public boolean laskeInduktioAskel(Termi t) {
         List<Termi> sijoitus = new ArrayList<>();
-        sijoitus.add(new Termi(0, 0));
+        sijoitus.add(t);
         Yhtalo y = yhtalo.kopioi();
         System.out.println(y);
         y.sijoitaMuuttujantilalle(sijoitus);
-        y.supistaSiirtamatta();
-        System.out.println("onko puolet samat =" + this.tarkistaOnkoPuoletSamatMuuttamattaPuolia(y.getVasenpuoli(), y.getOikeapuoli()));
         System.out.println(y);
+        y.supistaSiirtamatta();
+        System.out.println(y);
+        boolean vastaus = this.tarkistaOnkoPuoletSamatMuuttamattaPuolia(y.getVasenpuoli(), y.getOikeapuoli());
+        System.out.println("pätikö induktioaskel =" + vastaus);
+        return vastaus;
     }
     
     public List<Komponentti> laskeListaYhteen(List<Komponentti> lista) {

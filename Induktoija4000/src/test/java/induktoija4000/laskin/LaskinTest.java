@@ -79,32 +79,65 @@ public class LaskinTest {
     
     @Test
     public void testaaKahdenTerminJaKahdenKertolaskunSupistus() {
-        Laskutoimitus t = new Laskutoimitus(new Termi(3, 0), '*', new Termi(3, 0));
-        t.supista();
-        assertEquals(9.0, t.palautaTulos().getArvo(), 0);
+        Laskutoimitus la = new Laskutoimitus(new Termi(3, 0), '*', new Termi(3, 0));
+        la.supista();
+        Termi t = (Termi) la.palautaTulosListana().get(0);
+        assertEquals(9.0, t.getArvo(), 0);
     }
     
     @Test
     public void testaaKahdestaTermistaKoostuvanJakolaskunSupistus() {
-        Laskutoimitus t = new Laskutoimitus(new Termi(3, 0), '/', new Termi(3, 0));
-        t.supista();
-        assertEquals(1.0, t.palautaTulos().getArvo(), 0);
+        Laskutoimitus la = new Laskutoimitus(new Termi(3, 0), '/', new Termi(3, 0));
+        la.supista();
+        Termi t = (Termi) la.palautaTulosListana().get(0);
+        assertEquals(1.0, t.getArvo(), 0);
     }
     
-    @Test
-    public void testaaYhtalonTermienSupistus() {
-        lukija.annaSyote("6/3=x*4");
-        yhtalo = lukija.lueKaikki();
-        assertTrue(yhtalo.supista());
-    }
+//    @Test
+//    public void testaaYhtalonTermienSupistus() {
+//        lukija.annaSyote("6/3=x*4");
+//        yhtalo = lukija.lueKaikki();
+//        assertTrue(yhtalo.s);
+//    }
     
     @Test
     public void testaaLaskimenYhtalonYhteenlasku() {
-        lukija.annaSyote("6/3+3=x*4-x");
-        yhtalo = lukija.lueKaikki();
-        yhtalo.supista();
-        laskin.annaYhtalo(yhtalo);
-        laskin.laskeYhteenKaikkiTermeina();
+        laskin.annaSyote("6/3+3=x*4-x");
+        laskin.getYhtalo().supistaSiirtamatta();
+        laskin.getYhtalo().siirraKaikkiVasemmalle();
+        laskin.laskeMolemmatPuoletYhteenSiirtamatta();
+//        lukija.annaSyote("6/3+3=x*4-x");
+//        yhtalo = lukija.lueKaikki();
+//        yhtalo.supista();
+//        laskin.annaYhtalo(yhtalo);
+//        laskin.laskeYhteenKaikkiTermeina();
         assertTrue(laskin.getYhtalo().toString().equals("5.0 -3.0n = 0"));
+    }
+    
+    @Test
+    public void testaaMonenmuotoistaDebuggausYhtaloa() {
+        laskin.annaSyote("6*6 + 6/6 + 6*(6+6) + 6/(6+6) + (6+6)*6 + (6+6)/6 + (6+6)(6+6) + (6+6)/(6+6) + 6*6*6 + 6/6/6 + 6*6*(6+6) + 6*6/(6+6) = n");
+        // t*t + t/t + t*l + t/l + l*t + l/t + l*l + l/l + la*t + la/t + la*l + la/l
+        laskin.laske();
+        Termi muuttuja = laskin.getYhtalo().getTermit().get(0);
+        Termi vakio = laskin.getYhtalo().getTermit().get(1);
+        // vastaus = n=979.666666666666
+        boolean eka = muuttuja.onkoSamanArvoinen(new Termi(1, 1));
+        boolean toka = vakio.onkoSamanArvoinen(new Termi(979.6666666666666, 0));
+        assertTrue(eka && toka);
+    }
+    
+    @Test
+    public void testaaYksinkertaistaInduktiota() {
+        laskin.annaSyote("sig(n,0,n(n+1)) = (n(n+1)(n+2))/3");
+        boolean onnistuiko = laskin.laske();
+        assertTrue(onnistuiko);
+    }
+    
+    @Test
+    public void testaaToistaYksinkertaistaInduktiota() {
+        laskin.annaSyote("sig(n,0,n+1) = ((n+1)((n+1)+1))/2");
+        boolean onnistuiko = laskin.laske();
+        assertTrue(onnistuiko);
     }
 }
