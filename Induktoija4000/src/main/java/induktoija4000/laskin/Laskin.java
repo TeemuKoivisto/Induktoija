@@ -105,7 +105,8 @@ public class Laskin {
                 + "\ninduktioväitteen mukaan yhtälön on pädettävä myös luvulla k+1"
                 + "\ntodistetaan, että induktioväite pätee"
                 + "\n(asioiden helpottamiseksi k:ta esitetään n:lla)");
-        sb.append("\n\nensin lisätään vasemmalle puolelle n + 1, joka lisätään oikeaan puoleen (muuttamatta negatiiviseksi)");
+        sb.append("\n\nensin lisätään vasemmalle puolelle n + 1,"
+                + "\njoka lisätään oikeaan puoleen (muuttamatta negatiiviseksi)");
         List<Komponentti> vasen = this.laskekplus1("vasen");
         
         sb.append("\n\nsitten lisätään oikealle puolelle n + 1 koskematta vasempaan");
@@ -151,7 +152,7 @@ public class Laskin {
         sijoitus.add(new Termi(1, 1));
         sijoitus.add(new Termi(1, 0));
         Yhtalo y = yhtalo.kopioi();
-        System.out.println(y);
+        sb.append("\n" + y);
         List<Komponentti> oikeapuoli = y.getOikeapuoli();
         if (puoli.equals("vasen")) {
             y.sijoitaListaan(sijoitus, y.getVasenpuoli());
@@ -160,12 +161,12 @@ public class Laskin {
             y.sijoitaListaan(sijoitus, oikeapuoli);
         }
         y.getVasenpuoli().clear();
-        System.out.println(y);
+        sb.append("\n" + y);
         y.supistaSiirtamatta();
-        System.out.println(y);
+        sb.append("\n" + y);
         this.laskeListaYhteen(y.getOikeapuoli());
         this.jarjestaLista(y.getOikeapuoli());
-        System.out.println(y);
+        sb.append("\n" + y);
         return y.getOikeapuoli();
     }
     
@@ -173,13 +174,13 @@ public class Laskin {
         List<Termi> sijoitus = new ArrayList<>();
         sijoitus.add(t);
         Yhtalo y = yhtalo.kopioi();
-        System.out.println(y);
+        sb.append("\n" + y);
         y.sijoitaMuuttujantilalle(sijoitus);
-        System.out.println(y);
+        sb.append("\n" + y);
         y.supistaSiirtamatta();
-        System.out.println(y);
+        sb.append("\n" + y);
         boolean vastaus = this.tarkistaOnkoPuoletSamatMuuttamattaPuolia(y.getVasenpuoli(), y.getOikeapuoli());
-        System.out.println("pätikö induktioaskel =" + vastaus);
+        sb.append("\npätikö induktioaskel =" + vastaus);
         return vastaus;
     }
     
@@ -237,14 +238,14 @@ public class Laskin {
     public void ratkaiseTermeistaKoostuvaYhtalo() {
         List<Termi> termit = yhtalo.getTermit();
         if (termit.size()==0 || termit.size()==1) {
-            System.out.println("\tn= 0");
+            ekajuuri="n= 0";
+            sb.append("\t" + ekajuuri);
         } else if (termit.size()==2) {
             this.ratkaiseKahdenTerminYhtalo();
         } else if (termit.size()==3) {
             this.ratkaiseKolmenTerminYhtalo();
         } else {
-            System.out.println("vituix men ratkaiseYhtalo()");
-            System.out.println("termejä >3");
+            sb.append("\nvituix men ratkaiseYhtalo koska termejä >3");
         }
     }
     
@@ -263,8 +264,8 @@ public class Laskin {
             }
         }
         this.jarjestaTermit();
-        System.out.println("välitulostus ratkaiseKahdenOsatekijanYhtalo() metodissa");
-        System.out.println(yhtalo);
+//        System.out.println("välitulostus ratkaiseKahdenOsatekijanYhtalo() metodissa");
+//        System.out.println(yhtalo);
         
         Termi n = termit.get(0);
         Termi vakio = termit.get(1);
@@ -273,7 +274,7 @@ public class Laskin {
         n.jaa(n.getArvo());
         
         ekajuuri = "n= " + vakio.getArvo();
-        System.out.println("\t" + ekajuuri);
+//        System.out.println("\t" + ekajuuri);
         sb.append("\t" + ekajuuri);
     }
     
@@ -293,8 +294,8 @@ public class Laskin {
         for (int i = termit.size()-1; i >= 0; i--) {
             termit.get(i).jaa(termit.get(0).getArvo());
         }
-        System.out.println("välitulostus ratkaiseKolmenOsatekijanYhtalo() metodissa");
-        System.out.println(yhtalo);
+//        System.out.println("välitulostus ratkaiseKolmenOsatekijanYhtalo() metodissa");
+//        System.out.println(yhtalo);
         
         if (termit.get(0).getMuuttuja()==2) {
             double n2 = termit.get(0).getArvo();
@@ -325,13 +326,13 @@ public class Laskin {
         if (mahdollinen) {
             ekajuuri = "n= " + df.format(r1);
             tokajuuri = "n= " + df.format(r2);
-            System.out.println("metodimme laskee vastauksiksi:\n\t" + ekajuuri + "\n\t" + tokajuuri);
+//            System.out.println("metodimme laskee vastauksiksi:\n\t" + ekajuuri + "\n\t" + tokajuuri);
             sb.append("metodimme laskee vastauksiksi:\n\t" + ekajuuri + "\n\t" + tokajuuri);
         } else {
             ekajuuri = "n= " + df.format(r1) + "+" + df.format(r2) + "i";
             tokajuuri = "n= " + df.format(r1) + "-" + df.format(r2) + "i";
-            System.out.println("metodimme laskee mahdottomiksi vastauksiksi:\n\t" + ekajuuri + "\n\t"
-                    + tokajuuri);
+//            System.out.println("metodimme laskee mahdottomiksi vastauksiksi:\n\t" + ekajuuri + "\n\t"
+//                    + tokajuuri);
             sb.append("metodimme laskee mahdottomiksi vastauksiksi:\n\t" + ekajuuri + "\n\t"+ tokajuuri);
         }
     }

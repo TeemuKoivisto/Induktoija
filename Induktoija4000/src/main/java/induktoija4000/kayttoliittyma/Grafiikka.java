@@ -43,11 +43,16 @@ public class Grafiikka implements Runnable{
         GridLayout layout = new GridLayout(1, 2, 2, 0);
         container.setLayout(layout);
         
+        JTextArea info = new JTextArea("Anna lauseke esim. n*3+19=n/n-12/8"+
+            "\nTai induktiolause kuten:"+
+            "\nsig(n,0,n+1) = ((n+1)((n+1)+1))/2" +
+            "\nsig(n,0,n(n+1)) = (n(n+1)(n+2))/3");
+        info.setEditable(false);
         JTextArea tulos = new JTextArea("");
-        tulos.setEnabled(true);
+        tulos.setEditable(false);
         JTextField syote = new JTextField("");
         
-        JPanel nappulapuoli = new JPanel(new GridLayout(3, 1));
+        JPanel nappulapuoli = new JPanel(new GridLayout(4, 1, 0, 2));
         JPanel namikat = new JPanel(new GridLayout(1, 3));
         JButton laske = new JButton("laske");
         JButton tyhjenna = new JButton("tyhjenna");
@@ -64,14 +69,12 @@ public class Grafiikka implements Runnable{
         tyhjenna.addActionListener(kuuntelija);
         lopeta.addActionListener(kuuntelija);
         
-//        Ikkuna ikkuna = new Ikkuna(laskin);
-        
+        nappulapuoli.add(info);
         nappulapuoli.add(tulos);
         nappulapuoli.add(syote);
         nappulapuoli.add(namikat);
         
         container.add(nappulapuoli);
-//        container.add(ikkuna);
         container.add(isotulos);
     }
 }

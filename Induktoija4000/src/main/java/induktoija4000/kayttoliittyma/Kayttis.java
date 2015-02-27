@@ -13,7 +13,7 @@ public class Kayttis {
     public Kayttis() {
         laskin = new Laskin();
         lukija = new Scanner(System.in);
-        gui = new Grafiikka(500, 300, laskin);
+        gui = new Grafiikka(800, 600, laskin);
     }
     
     public void kaynnistaGraafinen() {
