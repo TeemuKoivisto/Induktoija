@@ -37,6 +37,7 @@ public class Kayttis {
             
             laskin.annaSyote(syote);
             laskin.laske();
+            System.out.println("\n" + laskin.getTuloste());
             break;
         }
     }

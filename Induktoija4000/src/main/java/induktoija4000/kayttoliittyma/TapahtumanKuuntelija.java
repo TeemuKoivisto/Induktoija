@@ -41,15 +41,11 @@ public class TapahtumanKuuntelija implements ActionListener{
         if (ae.getSource() == laske) {
             String teksti = syote.getText();
             laskin.annaSyote(teksti);
-//            laskin.laske();
-            laskin.laskeTulosteeseen();
+            laskin.laske();
             isotulos.setText(laskin.getTuloste());
-            String ekatulos = "";
-            String tokatulos = "";
-            if (laskin.getTokajuuri()!=null) {
-                ekatulos += "\n      " + laskin.getEkajuuri();
-                tokatulos += "\n\n      " + laskin.getTokajuuri();
-            }
+            String ekatulos = "\n      " + laskin.getEkajuuri();
+            String tokatulos = "\n\n      " + laskin.getTokajuuri();
+            
             tulos.setText(ekatulos + tokatulos);
         }
         if (ae.getSource() == tyhjenna) {

@@ -12,7 +12,6 @@ public class Laskin {
     private Lukija lukija;
     private String ekajuuri;
     private String tokajuuri;
-//    private String tuloste;
     private StringBuilder sb;
     
     public Laskin() {
@@ -26,7 +25,6 @@ public class Laskin {
         yhtalo = lukija.lueKaikki();
         ekajuuri = "";
         tokajuuri = "";
-//        tuloste = "";
         sb = new StringBuilder();
     }
     
@@ -34,14 +32,14 @@ public class Laskin {
         yhtalo = y;
     }
     
-    public boolean laskeTulosteeseen() {
+    public boolean laske() {
         sb.append("luetaan...\n");
         sb.append(yhtalo);
         
         if (!yhtalo.getVasenpuoli().isEmpty() && yhtalo.getVasenpuoli().get(0).onkoSumma()) {
             sb.append("\n\nensimmäinen komponentti oli summa");
             sb.append("\ninduktoidaan:");
-            return this.induktoiTulosteeseen();
+            return this.induktioLaske();
         }
         
         sb.append("\n\nsupistetaan...\n");
@@ -59,40 +57,10 @@ public class Laskin {
         
         sb.append("\n\nratkaistaan yhtalo...\n");
         this.ratkaiseKomponenteistaKoostuvaYhtalo();
-//        System.out.println(yhtalo);
         return false;
     }
     
-    public boolean laske() {
-        System.out.println("\nluetaan...");
-        System.out.println(yhtalo);
-        
-        if (!yhtalo.getVasenpuoli().isEmpty() && yhtalo.getVasenpuoli().get(0).onkoSumma()) {
-            System.out.println("\nensimmäinen komponentti oli summa");
-            System.out.println("induktoidaan:");
-            return induktioLaske();
-        }
-        
-        System.out.println("\nsupistetaan...");
-        yhtalo.supistaSiirtamatta();
-        yhtalo.siirraKaikkiVasemmalle();
-        System.out.println(yhtalo);
-        
-        System.out.println("\nlasketaan kaikki yhteen...");
-        this.laskeMolemmatPuoletYhteenSiirtamatta();
-        System.out.println(yhtalo);
-        
-        System.out.println("\njarjestetaan kaikki...");
-        this.jarjestaKomponentit();
-        System.out.println(yhtalo);
-        
-        System.out.println("\nratkaistaan yhtalo...");
-        this.ratkaiseKomponenteistaKoostuvaYhtalo();
-        System.out.println(yhtalo);
-        return false;
-    }
-    
-    public boolean induktoiTulosteeseen() {
+    public boolean induktioLaske() {
         Summa summa = (Summa) yhtalo.getVasenpuoli().get(0);
         sb.append("\n\nlasketaan induktioaskel arvolla " + summa.getAlaraja() + "...");
         boolean pateeko = this.laskeInduktioAskel(summa.getAlaraja());
@@ -117,33 +85,6 @@ public class Laskin {
         sb.append("\n" + oikea);
         pateeko = this.tarkistaOnkoPuoletSamat(vasen, oikea);
         sb.append("\nonko induktioväite tosi =" + pateeko);
-        return pateeko;
-    }
-    
-    public boolean induktioLaske() {
-        Summa summa = (Summa) yhtalo.getVasenpuoli().get(0);
-        System.out.println("\nlasketaan induktioaskel arvolla " + summa.getAlaraja() + "...");
-        boolean pateeko = this.laskeInduktioAskel(summa.getAlaraja());
-        
-        if (!pateeko) {
-            System.out.println("heh heh induktioaskel ei pätenytkään");
-            return false;
-        }
-        System.out.println("\ninduktio-oletus: oletetaan, että yhtalo pätee luvulla n=k, k<N"
-                + "\ninduktioväitteen mukaan yhtälön on pädettävä myös luvulla k+1"
-                + "\ntodistetaan, että induktioväite pätee"
-                + "\n(asioiden helpottamiseksi k:ta esitetään n:lla)");
-        System.out.println("\nensin lisätään vasemmalle puolelle n + 1, joka lisätään oikeaan puoleen (muuttamatta negatiiviseksi)");
-        List<Komponentti> vasen = this.laskekplus1("vasen");
-        
-        System.out.println("\nsitten lisätään oikealle puolelle n + 1 koskematta vasempaan");
-        List<Komponentti> oikea = this.laskekplus1("oikea");
-        
-        System.out.println("\njos puolet ovat samat on induktioväite tosi");
-        System.out.println(vasen);
-        System.out.println(oikea);
-        pateeko = this.tarkistaOnkoPuoletSamat(vasen, oikea);
-        System.out.println(pateeko);
         return pateeko;
     }
     
@@ -274,7 +215,6 @@ public class Laskin {
         n.jaa(n.getArvo());
         
         ekajuuri = "n= " + vakio.getArvo();
-//        System.out.println("\t" + ekajuuri);
         sb.append("\t" + ekajuuri);
     }
     
@@ -326,13 +266,10 @@ public class Laskin {
         if (mahdollinen) {
             ekajuuri = "n= " + df.format(r1);
             tokajuuri = "n= " + df.format(r2);
-//            System.out.println("metodimme laskee vastauksiksi:\n\t" + ekajuuri + "\n\t" + tokajuuri);
             sb.append("metodimme laskee vastauksiksi:\n\t" + ekajuuri + "\n\t" + tokajuuri);
         } else {
             ekajuuri = "n= " + df.format(r1) + "+" + df.format(r2) + "i";
             tokajuuri = "n= " + df.format(r1) + "-" + df.format(r2) + "i";
-//            System.out.println("metodimme laskee mahdottomiksi vastauksiksi:\n\t" + ekajuuri + "\n\t"
-//                    + tokajuuri);
             sb.append("metodimme laskee mahdottomiksi vastauksiksi:\n\t" + ekajuuri + "\n\t"+ tokajuuri);
         }
     }
