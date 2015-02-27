@@ -63,5 +63,5 @@ induktointia.
 26.2 4.5h - Järjestin ja selkeytin koodia. Turhia metodeja läx jälleen. Lisäsin myös testejä.
 Rivikattavuus nyt 61% ja mutaatio 40%. 
 
-27.2 4h - Tein graafista käyttöliittymää. Muokkasin Laskin-luokkaa tallentamaan tulosteet
-strinbuilderiin souttaamisen sijaan.
+27.2 6h - Tein graafista käyttöliittymää. Muokkasin Laskin-luokkaa tallentamaan tulosteet
+stringbuilderiin souttaamisen sijaan. 

@@ -1,31 +1,3 @@
-(3x^2 -5x -1) = l1
-/
-(x -3) = l2
-
-if l2.ekaOt.getVar != l1.ekaaOt.getVar
-l2.var++
-else
-// x^2 -3x
-if l2.ekaOt.getArvo != l1.ekaOt.getArvo
-double x1 = l1.ekaOt.getArvo/l2.ekaOt.getArvo
-l2.ekaOt.kerro(x1)
-
-// 3x^2 -9x = valiTulos
-l1.vahenna(valiTulos)
-// l1 = -14x -1
-
-sama rumba, nyt vain suoraan
-double x2 = l1.ekaOt.getArvo/l2.ekaOt.getArvo
-l2.ekaOt.kerro(x2)
-
-// -14x 42
-l1.vahenna(valiTulos)
-l1 = -43
-
-eli vastaus x1*var + x2 + l1/l2
-3x -14 -43/(x-3)
-
-xxxxxxxxxx
 INDUKTIO
 
 sig(n, 0, n) = (n(n+1))/2 >> induktio pätee

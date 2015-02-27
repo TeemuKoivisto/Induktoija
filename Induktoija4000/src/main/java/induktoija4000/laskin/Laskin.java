@@ -335,6 +335,19 @@ public class Laskin {
         return onko;
     }
     
+    
+    
+    public void tulostaTyypit() {
+        for (Komponentti k : yhtalo.getVasenpuoli()) {
+            System.out.print(k.palautaTyyppi()+" ");
+        }
+        System.out.print("= ");
+        for (Komponentti k : yhtalo.getOikeapuoli()) {
+            System.out.print(k.palautaTyyppi() +" ");
+        }
+        System.out.println("");
+    }
+    
     public void jarjestaLista(List<Komponentti> lista) {
         Collections.sort(lista, new KomponenttiComparator());
     }

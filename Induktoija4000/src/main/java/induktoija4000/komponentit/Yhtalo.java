@@ -95,17 +95,6 @@ public class Yhtalo {
         return termeina;
     }
     
-    public void tulostaTyypit() {
-        for (Komponentti k : vasenpuoli) {
-            System.out.print(k.palautaTyyppi()+" ");
-        }
-        System.out.print("= ");
-        for (Komponentti k : oikeapuoli) {
-            System.out.print(k.palautaTyyppi() +" ");
-        }
-        System.out.println("");
-    }
-    
     public String toString() {
         String tuloste = "";
         if (this.termeina == null) {
