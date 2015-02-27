@@ -10,6 +10,8 @@ public class Laskin {
     
     private Yhtalo yhtalo;
     private Lukija lukija;
+    private String ekajuuri;
+    private String tokajuuri;
     
     public Laskin() {
         yhtalo = new Yhtalo();
@@ -19,6 +21,8 @@ public class Laskin {
     public void annaSyote(String s) {
         lukija.annaSyote(s);
         yhtalo = lukija.lueKaikki();
+        ekajuuri = "";
+        tokajuuri = "";
     }
     
     public void annaYhtalo(Yhtalo y) {
@@ -29,7 +33,7 @@ public class Laskin {
         System.out.println("\nluetaan...");
         System.out.println(yhtalo);
         
-        if (yhtalo.getVasenpuoli().get(0).onkoSumma()) {
+        if (!yhtalo.getVasenpuoli().isEmpty() && yhtalo.getVasenpuoli().get(0).onkoSumma()) {
             System.out.println("\nensimmäinen komponentti oli summa");
             System.out.println("induktoidaan:");
             return induktioLaske();
@@ -207,7 +211,8 @@ public class Laskin {
         vakio.jaa(n.getArvo());
         n.jaa(n.getArvo());
         
-        System.out.println("\tn= " + vakio.getArvo());
+        ekajuuri = "n= " + vakio.getArvo();
+        System.out.println("\t" + ekajuuri);
     }
     
     public void ratkaiseKolmenTerminYhtalo() {
@@ -256,10 +261,14 @@ public class Laskin {
         df.setMaximumFractionDigits(6);
         
         if (mahdollinen) {
-            System.out.println("metodimme laskee vastauksiksi:\n\tr1= " + df.format(r1) + "\n\tr2= " + df.format(r2));
+            ekajuuri = "n= " + df.format(r1);
+            tokajuuri = "n= " + df.format(r2);
+            System.out.println("metodimme laskee vastauksiksi:\n\t" + ekajuuri + "\n\t" + tokajuuri);
         } else {
-            System.out.println("metodimme laskee mahdottomiksi vastauksiksi:\n\tr1= " +
-            df.format(r1) + "+" + df.format(r2) +"i\n\tr2= " + df.format(r1) + "-" + df.format(r2) +"i");
+            ekajuuri = "n= " + df.format(r1) + "+" + df.format(r2) + "i";
+            tokajuuri = "n= " + df.format(r1) + "-" + df.format(r2) + "i";
+            System.out.println("metodimme laskee mahdottomiksi vastauksiksi:\n\t" + ekajuuri + "\n\t"
+                    + tokajuuri);
         }
     }
     
@@ -338,5 +347,13 @@ public class Laskin {
     
     public Yhtalo getYhtalo() {
         return yhtalo;
+    }
+    
+    public String getEkajuuri() {
+        return ekajuuri;
+    }
+    
+    public String getTokajuuri() {
+        return tokajuuri;
     }
 }

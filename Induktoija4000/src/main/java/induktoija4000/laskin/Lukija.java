@@ -23,6 +23,8 @@ public class Lukija {
     
     public void annaSyote(String s) {
         this.s=s;
+        paikka = -1;
+        yhtalo = new Yhtalo();
     }
     
     public Yhtalo lueKaikki() {

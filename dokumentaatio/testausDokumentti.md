@@ -48,6 +48,7 @@ t*t + t/t + t*l + t/l + l*t + l/t + l*l + l/l + la*t + la/t + la*l + la/l
 n=979.666666666666
 
 onnistuneesti debugattuja lausekkeita:
+3n+3*3(3+(3/n)*7)=2n+3
 23x+234/34x=24x-24
 34n*34n/34n*3-34/2=342+234
 n + 1 +n+3 = n*9/3 + 5*n 2*4 + n
@@ -74,6 +75,8 @@ sig(n, 1, n+3) = n*9/3 + 5*n 2*4 + n
 
 xxxxxxxxxxxxxx
 
+mahdoton 2-asteen paska:
+n+3*3=34n*3n+142
 
 23x+234/34x+34= 24x-24+24*34*234-234324
 23x+234/34x=24x-24

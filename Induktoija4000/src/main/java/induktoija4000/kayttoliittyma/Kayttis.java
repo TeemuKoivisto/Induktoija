@@ -2,15 +2,22 @@ package induktoija4000.kayttoliittyma;
 
 import induktoija4000.laskin.Laskin;
 import java.util.Scanner;
+import javax.swing.SwingUtilities;
 
 public class Kayttis {
     
     private Laskin laskin;
     private Scanner lukija;
+    private Grafiikka gui;
     
     public Kayttis() {
         laskin = new Laskin();
         lukija = new Scanner(System.in);
+        gui = new Grafiikka(500, 300, laskin);
+    }
+    
+    public void kaynnistaGraafinen() {
+        SwingUtilities.invokeLater(gui);
     }
     
     public void kaynnista() {

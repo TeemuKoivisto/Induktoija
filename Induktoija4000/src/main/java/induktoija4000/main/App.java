@@ -12,7 +12,8 @@ public class App {
     public static void main(String[] args) {
 //        testaamista();
         Kayttis ohjelma = new Kayttis();
-        ohjelma.kaynnista();
+        ohjelma.kaynnistaGraafinen();
+//        ohjelma.kaynnista();
     }
     
     public static void testaamista() {

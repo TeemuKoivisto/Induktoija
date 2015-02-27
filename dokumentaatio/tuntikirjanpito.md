@@ -62,3 +62,5 @@ induktointia.
 
 26.2 4.5h - Järjestin ja selkeytin koodia. Turhia metodeja läx jälleen. Lisäsin myös testejä.
 Rivikattavuus nyt 61% ja mutaatio 40%.
+
+ikkunan skaalaaja
