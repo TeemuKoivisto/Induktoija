@@ -40,17 +40,14 @@ public class Grafiikka implements Runnable{
     }
     
     public void luoKomponentit(Container container) {
-        GridLayout layout = new GridLayout(1, 2);
-        JPanel nappulapuoli = new JPanel(new GridLayout(3, 1));
-        
-//        GridLayout ikkunapuoli = new GridLayout(1, 1);
+        GridLayout layout = new GridLayout(1, 2, 2, 0);
         container.setLayout(layout);
-//        JTextField tulos = new JTextField("");
+        
         JTextArea tulos = new JTextArea("");
-//        tulos.setPreferredSize(new Dimension(leveys, korkeus-200));
-        tulos.setEnabled(false);
+        tulos.setEnabled(true);
         JTextField syote = new JTextField("");
         
+        JPanel nappulapuoli = new JPanel(new GridLayout(3, 1));
         JPanel namikat = new JPanel(new GridLayout(1, 3));
         JButton laske = new JButton("laske");
         JButton tyhjenna = new JButton("tyhjenna");
@@ -60,19 +57,21 @@ public class Grafiikka implements Runnable{
         namikat.add(tyhjenna);
         namikat.add(lopeta);
         
-        TapahtumanKuuntelija kuuntelija = new TapahtumanKuuntelija(laskin, tulos, syote, laske, tyhjenna, lopeta);
+        JTextArea isotulos = new JTextArea("");
+        TapahtumanKuuntelija kuuntelija = new TapahtumanKuuntelija(laskin, tulos, isotulos, syote, laske, tyhjenna, lopeta);
         
         laske.addActionListener(kuuntelija);
         tyhjenna.addActionListener(kuuntelija);
         lopeta.addActionListener(kuuntelija);
         
-        Ikkuna ikkuna = new Ikkuna(laskin);
+//        Ikkuna ikkuna = new Ikkuna(laskin);
+        
         nappulapuoli.add(tulos);
         nappulapuoli.add(syote);
         nappulapuoli.add(namikat);
         
         container.add(nappulapuoli);
-        container.add(ikkuna);
 //        container.add(ikkuna);
+        container.add(isotulos);
     }
 }

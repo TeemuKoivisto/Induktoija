@@ -61,6 +61,7 @@ kunnollinen metodi, joka tuottaa induktio-väittämän ja vertaa ovatko puolet iden
 induktointia.
 
 26.2 4.5h - Järjestin ja selkeytin koodia. Turhia metodeja läx jälleen. Lisäsin myös testejä.
-Rivikattavuus nyt 61% ja mutaatio 40%.
+Rivikattavuus nyt 61% ja mutaatio 40%. 
 
-ikkunan skaalaaja
+27.2 4h - Tein graafista käyttöliittymää. Muokkasin Laskin-luokkaa tallentamaan tulosteet
+strinbuilderiin souttaamisen sijaan.

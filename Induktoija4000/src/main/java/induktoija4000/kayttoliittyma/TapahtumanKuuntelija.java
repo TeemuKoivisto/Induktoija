@@ -20,14 +20,16 @@ public class TapahtumanKuuntelija implements ActionListener{
 
     private Laskin laskin;
     private JTextArea tulos;
+    private JTextArea isotulos;
     private JTextField syote;
     private JButton laske;
     private JButton tyhjenna;
     private JButton lopeta;
     
-    public TapahtumanKuuntelija(Laskin l, JTextArea tulos, JTextField syote, JButton laske, JButton tyhjenna, JButton lopeta) {
+    public TapahtumanKuuntelija(Laskin l, JTextArea tulos, JTextArea isotulos, JTextField syote, JButton laske, JButton tyhjenna, JButton lopeta) {
         laskin=l;
         this.tulos=tulos;
+        this.isotulos=isotulos;
         this.syote=syote;
         this.laske=laske;
         this.tyhjenna=tyhjenna;
@@ -39,7 +41,9 @@ public class TapahtumanKuuntelija implements ActionListener{
         if (ae.getSource() == laske) {
             String teksti = syote.getText();
             laskin.annaSyote(teksti);
-            laskin.laske();
+//            laskin.laske();
+            laskin.laskeTulosteeseen();
+            isotulos.setText(laskin.getTuloste());
             String ekatulos = "";
             String tokatulos = "";
             if (laskin.getTokajuuri()!=null) {
@@ -51,6 +55,7 @@ public class TapahtumanKuuntelija implements ActionListener{
         if (ae.getSource() == tyhjenna) {
             tulos.setText("");
             syote.setText("");
+            isotulos.setText("");
         }
         if (ae.getSource() == lopeta) {
             System.exit(0);

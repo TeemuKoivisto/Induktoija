@@ -12,10 +12,13 @@ public class Laskin {
     private Lukija lukija;
     private String ekajuuri;
     private String tokajuuri;
+//    private String tuloste;
+    private StringBuilder sb;
     
     public Laskin() {
         yhtalo = new Yhtalo();
         lukija = new Lukija();
+        sb = new StringBuilder();
     }
     
     public void annaSyote(String s) {
@@ -23,10 +26,41 @@ public class Laskin {
         yhtalo = lukija.lueKaikki();
         ekajuuri = "";
         tokajuuri = "";
+//        tuloste = "";
+        sb = new StringBuilder();
     }
     
     public void annaYhtalo(Yhtalo y) {
         yhtalo = y;
+    }
+    
+    public boolean laskeTulosteeseen() {
+        sb.append("luetaan...\n");
+        sb.append(yhtalo);
+        
+        if (!yhtalo.getVasenpuoli().isEmpty() && yhtalo.getVasenpuoli().get(0).onkoSumma()) {
+            sb.append("\n\nensimmäinen komponentti oli summa");
+            sb.append("\ninduktoidaan:");
+            return this.induktoiTulosteeseen();
+        }
+        
+        sb.append("\n\nsupistetaan...\n");
+        yhtalo.supistaSiirtamatta();
+        yhtalo.siirraKaikkiVasemmalle();
+        sb.append(yhtalo);
+        
+        sb.append("\n\nlasketaan kaikki yhteen...\n");
+        this.laskeMolemmatPuoletYhteenSiirtamatta();
+        sb.append(yhtalo);
+        
+        sb.append("\n\njarjestetaan kaikki...\n");
+        this.jarjestaKomponentit();
+        sb.append(yhtalo);
+        
+        sb.append("\n\nratkaistaan yhtalo...\n");
+        this.ratkaiseKomponenteistaKoostuvaYhtalo();
+//        System.out.println(yhtalo);
+        return false;
     }
     
     public boolean laske() {
@@ -56,6 +90,33 @@ public class Laskin {
         this.ratkaiseKomponenteistaKoostuvaYhtalo();
         System.out.println(yhtalo);
         return false;
+    }
+    
+    public boolean induktoiTulosteeseen() {
+        Summa summa = (Summa) yhtalo.getVasenpuoli().get(0);
+        sb.append("\n\nlasketaan induktioaskel arvolla " + summa.getAlaraja() + "...");
+        boolean pateeko = this.laskeInduktioAskel(summa.getAlaraja());
+        
+        if (!pateeko) {
+            sb.append("\n\nheh heh induktioaskel ei pätenytkään");
+            return false;
+        }
+        sb.append("\n\ninduktio-oletus: oletetaan, että yhtalo pätee luvulla n=k, k<N"
+                + "\ninduktioväitteen mukaan yhtälön on pädettävä myös luvulla k+1"
+                + "\ntodistetaan, että induktioväite pätee"
+                + "\n(asioiden helpottamiseksi k:ta esitetään n:lla)");
+        sb.append("\n\nensin lisätään vasemmalle puolelle n + 1, joka lisätään oikeaan puoleen (muuttamatta negatiiviseksi)");
+        List<Komponentti> vasen = this.laskekplus1("vasen");
+        
+        sb.append("\n\nsitten lisätään oikealle puolelle n + 1 koskematta vasempaan");
+        List<Komponentti> oikea = this.laskekplus1("oikea");
+        
+        sb.append("\n\njos puolet ovat samat on induktioväite tosi");
+        sb.append("\n" + vasen);
+        sb.append("\n" + oikea);
+        pateeko = this.tarkistaOnkoPuoletSamat(vasen, oikea);
+        sb.append("\nonko induktioväite tosi =" + pateeko);
+        return pateeko;
     }
     
     public boolean induktioLaske() {
@@ -213,6 +274,7 @@ public class Laskin {
         
         ekajuuri = "n= " + vakio.getArvo();
         System.out.println("\t" + ekajuuri);
+        sb.append("\t" + ekajuuri);
     }
     
     public void ratkaiseKolmenTerminYhtalo() {
@@ -264,11 +326,13 @@ public class Laskin {
             ekajuuri = "n= " + df.format(r1);
             tokajuuri = "n= " + df.format(r2);
             System.out.println("metodimme laskee vastauksiksi:\n\t" + ekajuuri + "\n\t" + tokajuuri);
+            sb.append("metodimme laskee vastauksiksi:\n\t" + ekajuuri + "\n\t" + tokajuuri);
         } else {
             ekajuuri = "n= " + df.format(r1) + "+" + df.format(r2) + "i";
             tokajuuri = "n= " + df.format(r1) + "-" + df.format(r2) + "i";
             System.out.println("metodimme laskee mahdottomiksi vastauksiksi:\n\t" + ekajuuri + "\n\t"
                     + tokajuuri);
+            sb.append("metodimme laskee mahdottomiksi vastauksiksi:\n\t" + ekajuuri + "\n\t"+ tokajuuri);
         }
     }
     
@@ -355,5 +419,9 @@ public class Laskin {
     
     public String getTokajuuri() {
         return tokajuuri;
+    }
+    
+    public String getTuloste() {
+        return sb.toString();
     }
 }
