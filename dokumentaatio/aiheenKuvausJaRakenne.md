@@ -14,8 +14,10 @@ yhtälön ratkaisemisesta, Lukija-luokan joka hoitaa syötteen
 muuntamisen Yhtälö-luokan ilmentymäksi sekä TermiComparator-luokan
 joka toteuttaa Comparator-rajapinnan.
 
-Kayttoliittyma-pakkaus sisältää pelkän Kayttoliittyma-luokan, mutta
-johon olisi myöhemmin tarkoitus sisällyttää sovelluksen grafiikka.
+Kayttoliittyma-pakkaus sisältää Kayttoliittyma-luokan, joka omistaa
+gui-nimisen Grafiikka-luokka olion, joka toteuttaa Javan Runnable-
+rajapinnan. Tämä gui käyttää TapahtumanKuuntelija-nimistä luokkaa,
+joka lähettää käskyjä Laskin-luokalle ja/tai hakee sieltä tietoa.
 
 Main-pakkaus sisältää ohjelman käynnistävän App-luokan.
 
@@ -70,9 +72,23 @@ koko ohjelman logiikasta.
 KAYTTOLIITTYMA
 -----
 
-Käyttöliittymä-luokka sisältää pelkän käynnistä()-metodin,
-yhden Laskin-luokka ilmentymän ja Scanner-luokan ilmentymän,
-jolla se lukee käyttäjän syötteen ja antaa sen Laskin-luokalle.
+Kayttoliittyma-luokka sisältää kaynnista()-metodin, joka käynnistää
+tekstikäyttöliittymän ja kaynnistaGraafinen()-metodin, joka käynnistää
+graafisen käyttöliittymän.
+Sillä on muuttujina Laskin, Scanner ja Grafiikka -luokkien oliot.
+
+Grafiikka-luokka luo kaikki graafisen käyttöliittymän nappulat sun
+muut tekstiruudut ja lähettää nappulat TapahtumanKuuntelija-nimiselle
+ActionListener-rajapinnan toteuttavalle luokalle.
+
+TapahtumanKuuntelija pitää sisällään parametreina kaikki Grafiikan
+luomat nappula ja tekstiruutu oliot. Näin se pystyy viittamaan suoraan
+niiden muistipaikkoihin ja käyttämään niitä mielinmäärin.
+Se sisältää myös muuttujana Laskin-luokan olion, johon se lähettää
+laske()-metodi käskyn ja ottaa takaisin getTuloste()-getterillä
+String-tyyppisen tulosteen, joka sisältää laskimen yksityiskohtaisemman
+laskemisen.
+
 
 MAIN
 -----
