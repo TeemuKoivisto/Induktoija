@@ -29,6 +29,8 @@ public class Laskutoimitus implements Komponentti {
         this.supistaTekijat();
         if (tyyppi=='/') {
             // 4/(6/(n+1)) >> 4(n+1)/6
+            // molemmat tekijät supistettu joten jos tokatekija on laskutoimitus
+            // se voi tarkoittaa vain jakamatonta laskutoimitusta
             if (ekaTekija.onkoTermi() && tokaTekija.onkoLaskutoimitus()) {
                 Termi ekaT = (Termi) ekaTekija;
                 Laskutoimitus la = (Laskutoimitus) tokaTekija;
@@ -39,7 +41,7 @@ public class Laskutoimitus implements Komponentti {
                 jaettu = ekaTekija.jaa(tokaTekija);
             }
         } else {
-            // käännetään jos kerrotaan Termia Lausekkeella. Termi kun ei osaa palauttaa lauseketta...
+            // käännetään jos kerrotaan Termia Lausekkeella/Laskutoimituksella. Termi kun ei osaa palauttaa lauseketta...
             if (ekaTekija.onkoTermi() && (tokaTekija.onkoLauseke() || tokaTekija.onkoLaskutoimitus())) {
                 Komponentti ekaT = ekaTekija;
                 ekaTekija = tokaTekija;
@@ -59,7 +61,7 @@ public class Laskutoimitus implements Komponentti {
     public void supistaTekijat() {
         ekaTekija.supista();
         tokaTekija.supista();
-        // korvaa supistetut laskutoimitukset termeilla
+        // korvaa supistetut laskutoimitukset termeilla (ja jos jakamaton laskutoimitus korvaa laskutoimituksen itsellään)
         if (ekaTekija.palautaTulosListana().size()==1) ekaTekija=ekaTekija.palautaTulosListana().get(0);
         if (tokaTekija.palautaTulosListana().size()==1) tokaTekija=tokaTekija.palautaTulosListana().get(0);
     }

@@ -12,6 +12,7 @@ public class Laskin {
     private Lukija lukija;
     private String ekajuuri;
     private String tokajuuri;
+    private String nollajuuri;
     private StringBuilder sb;
     
     public Laskin() {
@@ -32,6 +33,11 @@ public class Laskin {
         yhtalo = y;
     }
     
+    /**
+     * Ratkaisee yhtälön.
+     * Kutsuu induktioLaske()-metodia jos yhtälö on induktoitava Summa.
+     * @return Palauttaa true jos induktioväite pätee. Normaalilla yhtälöllä aina false.
+     */
     public boolean laske() {
         sb.append("luetaan...\n");
         sb.append(yhtalo);
@@ -52,7 +58,7 @@ public class Laskin {
         sb.append(yhtalo);
         
         sb.append("\n\njarjestetaan kaikki...\n");
-        this.jarjestaKomponentit();
+        this.jarjestaYhtalonVasenpuoli();
         sb.append(yhtalo);
         
         sb.append("\n\nratkaistaan yhtalo...\n");
@@ -60,6 +66,12 @@ public class Laskin {
         return false;
     }
     
+    /**
+     * Laskee induktioväitteen paikkaansa pitävyyden.
+     * Testaa ensin induktioaskeleen Summan alarajalla esim. i=0,
+     * jonka jälkeen laskee molemmat puolet k+1:llä.
+     * @return Palauttaa true jos puolet ovat samat eli induktioväite pätee.
+     */
     public boolean induktioLaske() {
         Summa summa = (Summa) yhtalo.getVasenpuoli().get(0);
         sb.append("\n\nlasketaan induktioaskel arvolla " + summa.getAlaraja() + "...");
@@ -88,6 +100,11 @@ public class Laskin {
         return pateeko;
     }
     
+    /**
+     * Lisää muuttujan tilalle n+1 induktioväitteen mukaisesti.
+     * @param puoli Puoli kumpi halutaan laskea.
+     * @return Palauttaa supistetun puolen listana.
+     */
     public List<Komponentti> laskekplus1(String puoli) {
         List<Termi> sijoitus = new ArrayList<>();
         sijoitus.add(new Termi(1, 1));
@@ -111,6 +128,11 @@ public class Laskin {
         return y.getOikeapuoli();
     }
     
+    /**
+     * Laskee induktioaskeleen Termin t arvolla.
+     * @param t Muuttujan tilalle sijoitettava arvo.
+     * @return Palauttaa true jos induktioaskel päti eli puolet olivat samat.
+     */
     public boolean laskeInduktioAskel(Termi t) {
         List<Termi> sijoitus = new ArrayList<>();
         sijoitus.add(t);
@@ -125,6 +147,11 @@ public class Laskin {
         return vastaus;
     }
     
+    /**
+     * Laskee kaikki komponentit yhteen listan sisällä.
+     * @param lista Laskettava lista.
+     * @return Palauttaa listan.
+     */
     public List<Komponentti> laskeListaYhteen(List<Komponentti> lista) {
         for (int i = 0; i < lista.size(); i++) {
             Komponentti eka = lista.get(i);
@@ -147,11 +174,17 @@ public class Laskin {
         return lista;
     }
     
+    /**
+     * Laskee Yhtälön molemmat puolet yhteen siirtämättä kumpaakaan puolta toiseen.
+     */
     public void laskeMolemmatPuoletYhteenSiirtamatta() {
         this.laskeListaYhteen(yhtalo.getVasenpuoli());
         this.laskeListaYhteen(yhtalo.getOikeapuoli());
     }
     
+    /**
+     * Ratkaisee Yhtälön joka ei suoraan supistunut Termeiksi.
+     */
     public void ratkaiseKomponenteistaKoostuvaYhtalo() {
         List<Komponentti> vasenpuoli = yhtalo.getVasenpuoli();
         boolean summa = false;
@@ -171,11 +204,14 @@ public class Laskin {
         } else {
             yhtalo.supistaSiirtamatta();
             yhtalo.supistaPuoletYhteenTermeina();
-            this.jarjestaTermit();
+            this.jarjestaTermeiksiSupistettuYhtalo();
             this.ratkaiseTermeistaKoostuvaYhtalo();
         }
     }
     
+    /**
+     * Ratkaisee Yhtälön joka on supistunut pelkiksi Termeiksi.
+     */
     public void ratkaiseTermeistaKoostuvaYhtalo() {
         List<Termi> termit = yhtalo.getTermit();
         if (termit.size()==0 || termit.size()==1) {
@@ -204,15 +240,15 @@ public class Laskin {
                ot.jaa(new Termi(1, pieninMuuttuja));
             }
         }
-        this.jarjestaTermit();
+        this.jarjestaTermeiksiSupistettuYhtalo();
 //        System.out.println("välitulostus ratkaiseKahdenOsatekijanYhtalo() metodissa");
 //        System.out.println(yhtalo);
         
         Termi n = termit.get(0);
         Termi vakio = termit.get(1);
         vakio.muutaNegatiiviseksi(); // siirto oikealle puolelle
-        vakio.jaa(n.getArvo());
-        n.jaa(n.getArvo());
+        vakio.jaa(new Termi(n.getArvo(), 0));
+        n.jaa(new Termi(n.getArvo(), 0));
         
         ekajuuri = "n= " + vakio.getArvo();
         sb.append("\t" + ekajuuri);
@@ -230,9 +266,9 @@ public class Laskin {
                t.jaa(new Termi(1, pieninMuuttuja));
             }
         }
-        this.jarjestaTermit();
+        this.jarjestaTermeiksiSupistettuYhtalo();
         for (int i = termit.size()-1; i >= 0; i--) {
-            termit.get(i).jaa(termit.get(0).getArvo());
+            termit.get(i).jaa(new Termi(termit.get(0).getArvo(), 0));
         }
 //        System.out.println("välitulostus ratkaiseKolmenOsatekijanYhtalo() metodissa");
 //        System.out.println(yhtalo);
@@ -352,11 +388,11 @@ public class Laskin {
         Collections.sort(lista, new KomponenttiComparator());
     }
     
-    public void jarjestaKomponentit() {
+    public void jarjestaYhtalonVasenpuoli() {
         Collections.sort(yhtalo.getVasenpuoli(), new KomponenttiComparator());
     }
     
-    public void jarjestaTermit() {
+    public void jarjestaTermeiksiSupistettuYhtalo() {
         Collections.sort(yhtalo.getTermit(), new TermiComparator());
     }
     

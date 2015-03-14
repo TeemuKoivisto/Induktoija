@@ -66,8 +66,8 @@ public class Lauseke implements Komponentti{
             }
             return onnistuiko;
         }
-        // (3+x)*3/5        (3+x)*3*3 >> ((l * ot)t * ot)
-        // ainoa vaihtoehto siis, että jo supistettu termi?
+        // (3+x)*3/5        (3+x)*3*3 >> ((l * t)la * t)
+        // ainoa vaihtoehto siis, että jo supistettu laskutoimitus?
         if (k.onkoLaskutoimitus()) {
             Lauseke kertoja = new Lauseke(k.palautaTulosListana());
             return this.kerro(kertoja);
@@ -117,7 +117,6 @@ public class Lauseke implements Komponentti{
             return true;
         }
         // (3+x)/(3+x)
-        // 3/(3+x) + x/(3+x)
         if (k.onkoLauseke()) {
 //            Lauseke l = (Lauseke) k;
             // nyt jaetaan vain täysin samanlaiset puolet
@@ -172,6 +171,7 @@ public class Lauseke implements Komponentti{
                 Komponentti toka = sisalto.get(j);
                 if (i!=j && eka.summaa(toka)) {
                     sisalto.remove(j);
+                    // j--??
                 }
             }
         }

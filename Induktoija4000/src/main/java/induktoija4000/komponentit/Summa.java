@@ -15,10 +15,8 @@ public class Summa implements Komponentti {
     }
     
     public Lauseke sijoitaMuuttujanTilalle(List<Termi> lista) {
-//        Lauseke lauseke = new Lauseke();
-//        summa.sijoitaMuuttujanTilalle(lista);
-//        return lauseke;
-        return summa.sijoitaMuuttujanTilalle(lista);
+        summa.sijoitaMuuttujanTilalle(lista);
+        return summa;
     }
     
     @Override

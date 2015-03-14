@@ -55,7 +55,7 @@ public class Termi implements Komponentti{
             return lauseke;
         }
         if (lista.size()>1) {
-            // 3n -> k+1 = 3*k + 3*1 
+            // 3n -> n+1 = 3*n + 3*1 
             for (int i = 0; i < lista.size(); i++) {
                 List<Termi> pikkulista = new ArrayList<Termi>();
                 pikkulista.add(lista.get(i));
@@ -111,11 +111,11 @@ public class Termi implements Komponentti{
     }
     
     public boolean kerro(Komponentti k) {
-        Komponentti kertoja = k.palautaTulosListana().get(0);
-        if (k.palautaTulosListana().size()>1 || kertoja.onkoLaskutoimitus()) {
+        List<Komponentti> kertoja = k.palautaTulosListana();
+        if (kertoja.size()>1 || kertoja.get(0).onkoLaskutoimitus() || kertoja.get(0).onkoLauseke()) {
             return false;
         } else {
-            Termi t = (Termi) kertoja;
+            Termi t = (Termi) kertoja.get(0);
             return this.kerro(t);
         }
         // 6*6
@@ -123,10 +123,10 @@ public class Termi implements Komponentti{
         // 6*(6+x)
     }
     
-    public Termi jaa(double d) {
-        this.arvo /= d;
-        return this;
-    }
+//    public Termi jaa(double d) {
+//        this.arvo /= d;
+//        return this;
+//    }
     
     public boolean jaa(Termi t) {
         this.arvo /= t.getArvo();

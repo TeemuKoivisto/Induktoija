@@ -19,6 +19,9 @@ public class Yhtalo {
         oikeapuoli = oikea;
     }
     
+    /**
+     * Supistaa molemmat puolet kerran siirtämättä Komponentteja puolelta toiselle.
+     */
     public void supistaSiirtamatta() {
         vasenpuoli = this.supistaListaKomponentteina(vasenpuoli);
         oikeapuoli = this.supistaListaKomponentteina(oikeapuoli);
@@ -38,7 +41,7 @@ public class Yhtalo {
             k.muutaNegatiiviseksi();
         }
         vasenpuoli.addAll(oikeapuoli);
-        oikeapuoli = new ArrayList<>();
+        oikeapuoli.clear();
     }
     
     public void supistaPuoletYhteenTermeina() {
